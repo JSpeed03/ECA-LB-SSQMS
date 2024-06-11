@@ -1,0 +1,222 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(48, 229, 241);
+  overflow: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 4fr 1.5fr;
+  grid-template-rows: 100% 1.5fr;
+  height: 100%;
+}
+
+.video-player {
+  position: relative;
+  padding-bottom: 56.25%; /* Aspect ratio 16:9*/
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.video-player video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.queue {
+  background-color: black;
+  color: white;
+  font-size: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+}
+
+.queue-logo {
+  width: 70px; /* Adjust size as needed */
+  height: auto;
+  margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.queue table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 13%;
+  margin-bottom: 1px;
+  table-layout: fixed;
+}
+
+.queue th,
+.queue td {
+  font-size: 70px;
+  padding-left: 5px;
+  padding-right: 20px;
+  padding-top: 0px;
+  text-align: left;
+  border-bottom: 0px solid white;
+  border: 5px solid white;
+  font-family: arial black;
+  width: 380px;
+}
+
+.queue th:first-child {
+  font-size: 50px;
+  font-family: Arial;
+  width: 200px;
+}
+
+.queue td:first-child {
+  font-size: 60px;
+  font-family: Arial;
+  width: 250px;
+}
+
+.queue th {
+  text-align: left;
+  font-size: 50px;
+  color: whitesmoke;
+  height: 50px;
+}
+
+.queue tr {
+  height: 149px; 
+}
+
+.logo-div {
+  position: absolute;
+  bottom: 0px;
+  left: -5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 250px;
+  height: auto;
+  background-size: 110% 100%; /* Add this line to scale the image */
+background-position: left; /* Add this line to center the image */
+}
+
+.bottom-left-logo {
+  width: 235px;
+  height: auto;
+  margin: 0 5px;
+}
+.logo-bg {
+  position: absolute;
+  bottom: -5px;
+  left: -200px;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 250px;
+  height: auto;
+  background-size: 110% 100%; /* Add this line to scale the image */
+  background-position: left; /* Add this line to center the image */
+  z-index: -1;
+}
+
+.bottom-left-bg {
+  width: auto;
+  height: auto;
+  margin: 0 5px;
+  z-index: -2;
+}
+
+.bottom-right-image {
+  position: absolute;
+  bottom: -5px;
+  right: 340px;
+  width: 0px; 
+  height: auto;
+}
+
+.running-news {
+position: absolute;
+bottom: 9%;
+left: 0px;
+width: 75%;
+height: 300px;
+
+z-index: -1;
+}
+
+.marquee {
+display: block;
+white-space: nowrap;
+padding: 0px;
+font-size: 200px;
+font-family: 'Times New Roman';
+color: rgb(0, 0, 0);
+animation: marquee 18s linear infinite;
+text-shadow: -2px -2px 2px #fff, 2px -2px 2px #fff, -2px 2px 2px #fff, 2px 2px 2px #fff;
+}
+
+@keyframes marquee {
+0% {
+transform: translateX(100%);
+}
+100% {
+transform: translateX(-380%);
+}
+}
+
+.bottom-image {
+position: absolute;
+bottom: -5px;
+left: 50%;
+transform: translateX(-50%);
+width: 100%; /* adjust the width to your desired size */
+height: auto;
+z-index: -2;
+}
+
+#digital-clock {
+  position: absolute;
+  top: 10px;
+  right: 400px;
+  width: 285px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 62px;
+  font-family: Arial;
+  color: white;
+}
+
+#date {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  width: auto;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 37px;
+  font-family: Arial;
+  color: white;
+}
+
+.new-row {
+  animation: blink 1s infinite;
+  animation-delay: 0s;
+  animation-duration: 5s;
+}
+
+@keyframes blink {
+  0% {
+    background-color: #fff; /* Initial background color */
+  }
+  50% {
+    background-color: #000; /* Inverse background color */
+  }
+  100% {
+    background-color: #fff; /* Initial background color */
+  }
+}

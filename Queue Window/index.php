@@ -1,0 +1,208 @@
+<?php
+require '../DBConn.php';
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Queue Window</title>
+  <link href="../logo/exact logo - HD.png" rel="icon">
+  <link rel="stylesheet" href="Queue Window.css">
+  <script type="text/javascript">
+
+function refreshPage() {
+    setTimeout(function() {
+        location.reload();
+    }, 10000); 
+}
+</script>
+</head>
+<body >
+  
+  <div class="grid">
+    <div class="video-player">
+      <video autoplay loop controls muted>
+        <source src="../queue_screen_video/EXACT.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    
+    <div class="queue" >
+      <table id="queueTable">
+      
+        <thead>
+        <tr>
+            <th>Window</th>
+            <th>Now Serving</th>
+        </tr>
+        </thead>
+        <tbody>
+        <audio id="notificationSound" src="notif.wav" preload="auto"></audio>
+
+        </tbody>
+      
+   
+      </table>
+    </div>
+    <div id="digital-clock"></div>
+    <div id="date"></div>
+  </div>
+  <table>
+    <tr>
+      <td>
+        <div class="logo-div">
+          <img class="bottom-left-logo" src="../logo/exact logo - HD.png" alt="Logo logo_main" />
+        </div>
+      </td>
+      <td>
+        <div class="bottom-right-image">
+          <img src="../logo/ECA ship and lighthouse cut.png" alt="Bottom Right Image" />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="running-news">
+          <h1 class="marquee" id="news"></h1>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="bottom-image">
+    <img src="../logo/eca bg.png" alt="Bottom Image">
+  </div> 
+  <div class="logo-bg">
+          <img class="bottom-left-bg" src="../logo/gradient bg.png" alt="Logo logo_main" />
+        </div>
+  <script>
+    function updateClock() {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const seconds = now.getSeconds().toString().padStart(2, "0");
+  const digitalClock = document.getElementById("digital-clock");
+  digitalClock.textContent = `${hours}:${minutes}:${seconds}`;
+
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const day = days[now.getDay()];
+  const date = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  const dateString = `${day}, ${month} ${date}, ${year}`;
+  const dateElement = document.getElementById("date");
+  dateElement.textContent = dateString;
+}
+
+function changeLogo() {
+  const logoDiv = document.querySelector(".logo-div img");
+  const logos = ["exact logo - HD.png", "BSIS.png", "CBA.png", "Crim.png", "Educ.png", "Maritime.png", "Tourism.png", "NSTP.png", "SHS.png", "BSIS.png"]; // Add your logos here
+  const randomLogo = logos[Math.floor(Math.random() * logos.length)];
+  logoDiv.src = `../logo/${randomLogo}`;
+}
+
+async function fetchNews() { //limit of 52 character max space include
+    try {
+      const response = await fetch('news_data.txt'); 
+      if (response.ok) {
+        const news = await response.text();
+        document.getElementById('news').textContent = news;
+      } else {
+        console.error('Error fetching news:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching news:', error);
+    }
+  }
+
+  
+
+setInterval(updateClock, 1000);
+setInterval(changeLogo, 2000); // Change logo every 2 seconds
+updateClock();
+changeLogo();
+fetchNews();
+  </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let previousData = null;
+
+  const fetchData = (date = null) => {
+    let url = 'fetchdata.php';
+    if (date) {
+      url += `?date=${date}`;
+    }
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const tableBody = document.querySelector('#queueTable tbody');
+        tableBody.innerHTML = '';
+
+        if (Array.isArray(data) && data.length > 0) {
+          if (JSON.stringify(data) !== JSON.stringify(previousData)) {
+            const notificationSound = document.getElementById('notificationSound');
+            notificationSound.play();
+            previousData = data;
+          }
+
+          data.forEach((row, index) => {
+  const tr = document.createElement('tr');
+  if (index < 10) {
+    tr.classList.add('initial-row');
+  } else {
+    tr.classList.add('additional-row');
+  }
+  tr.classList.add('new-row'); // Add a new CSS class to the newly added row
+  Object.values(row).forEach(cell => {
+    const td = document.createElement('td');
+    td.textContent = cell;
+    tr.appendChild(td);
+  });
+  tableBody.appendChild(tr);
+});
+
+
+        } else {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 2;
+          td.textContent = 'No data available';
+          tr.appendChild(td);
+          tableBody.appendChild(tr);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        const tableBody = document.querySelector('#queueTable tbody');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 2;
+        td.textContent = 'Error fetching data';
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+      });
+  };
+
+  fetchData();
+
+  setInterval(fetchData, 1000);
+
+  document.getElementById('filterDate').addEventListener('change', function() {
+    const date = this.value;
+    fetchData(date);
+  });
+});
+
+</script>
+
+
+
+</body>
+</html>
