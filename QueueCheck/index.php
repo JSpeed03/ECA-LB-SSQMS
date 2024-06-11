@@ -33,11 +33,37 @@ require '../DBConn.php';
         document.getElementById('regtext').value = regText;
         document.getElementById('digit').value = digit;
     });
+
+    // Set the inactivity timeout in milliseconds
+  const inactivityTimeout = 300000; // 5 minutes
+
+  // Set the inactivity timer
+  let inactivityTimer = setTimeout(() => {
+    // Redirect to the index page
+    window.location.href = '../index.html';
+  }, inactivityTimeout);
+
+  // Reset the inactivity timer on user activity
+  document.addEventListener('mousemove', () => {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      window.location.href = '../index.html';
+    }, inactivityTimeout);
+  });
+
+  document.addEventListener('keypress', () => {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      window.location.href = '../index.html';
+    }, inactivityTimeout);
+  });
 </script>
 
   </div>
   <footer class="footer-container">
-    <a href="../index.html">back</a>
+  <a href="../index.html">
+    <button type="submit" style="background-color: #e3ff37; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer;">Home</button>
+  </a>
   </footer>
 
   

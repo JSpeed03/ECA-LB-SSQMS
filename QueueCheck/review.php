@@ -71,6 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       
 
         <a href="index.php"><button type="button">Check Another Queue</button></a>
+        <a href="../index.html">
+            <button type="submit" style="background-color: #e3ff37; border: none; padding: 16px 30px; font-size: 16px; cursor: pointer;">Home</button>
+        </a>
         <?php
         if ($row['transaction_name'] == 'Enrollment') {
            ?>
@@ -83,13 +86,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
         
     </div>
+
+    <script>
+        // Set the inactivity timeout in milliseconds
+  const inactivityTimeout = 300000; // 5 minutes
+
+// Set the inactivity timer
+let inactivityTimer = setTimeout(() => {
+  // Redirect to the index page
+  window.location.href = '../index.html';
+}, inactivityTimeout);
+
+// Reset the inactivity timer on user activity
+document.addEventListener('mousemove', () => {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    window.location.href = '../index.html';
+  }, inactivityTimeout);
+});
+
+document.addEventListener('keypress', () => {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    window.location.href = '../index.html';
+  }, inactivityTimeout);
+});
+    </script>
 </body>
 </html>
 <?php 
 
 
 } else {
-    echo "No matching queue numbers found.";
+    echo "<script>alert('404 Queue Number not found'); window.history.back();</script>";
 }
 } else {
 echo "Error executing query: " . mysqli_error($conn);
