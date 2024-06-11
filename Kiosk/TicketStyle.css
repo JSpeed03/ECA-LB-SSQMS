@@ -1,0 +1,160 @@
+body {
+    background-color: #652eff; /* Blue background color */
+    font-family: Arial, sans-serif; /* Optional: Change font */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #fff; /* Text color */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+    font-size: 72px;
+}
+
+header img {
+    width: 250px;
+    height: auto;
+    object-fit: contain;
+}
+
+h1 {
+    text-align: center;
+    position: fixed;
+    top: 20%;
+    font-size: 200px;
+}
+
+h2 {
+    text-align: center;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px; /* Adjust as needed */
+    margin-bottom: 10px; /* Optional: Add spacing between heading and paragraph */
+}
+
+p {
+    text-align: center;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px; /* Optional: Adjust font size */
+    margin-bottom: 20px; /* Optional: Add spacing between heading and paragraph */
+}
+
+.button-container {
+    position: fixed;
+    bottom: 50px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+footer {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #000000; /* Text color for footer */
+    font-size: 14px; /* Adjust font size as needed */
+    margin-top: 10px; /* Add spacing between the button and the footer */
+}
+
+button {
+    background-color: yellow; /* Yellow button color */
+    color: #000000; /* Text color for button */
+    border: none;
+    padding: 20px 40px; /*button size*/
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #f39c12; /* Darker yellow on hover */
+}
+
+a {
+    color: #fff; /* Text color for link */
+    text-decoration: none; /* Remove underline from link */
+}
+
+a:hover {
+    color: #ecf0f1; /* Lighter text color on hover */
+}
+
+@media print {
+    h1, h2, p, footer {
+        page-break-inside: avoid;
+    }
+
+    h2, footer {
+        display: none;
+    }
+
+    header {
+        position: fixed;
+        top: 1%;
+        left: 0;
+        width: 95%;
+        height: 20%;
+        background-color: #f1f1f1;
+        padding: 5px;
+        text-align: center;
+        color: #000000;
+    }
+
+    header img {
+        width: 50px; /* adjust the width of the images */
+        height: auto; /* adjust the height of the images */
+        object-fit: contain;
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+
+    header h3 {
+        font-size: 14px; /* adjust the font size of the h3 element */
+    }
+
+    h1 {
+        position: fixed;
+        top: 15%; /* Adjusted position for printing */
+        font-size: 60px; /*adjust font-size pepnding on paper and printer*/
+        color: #000000;
+        page-break-after: always;
+    }
+
+    p {
+white-space: nowrap; /* Add this line to prevent line breaks */
+position: fixed;
+bottom: 15%; /* Position near the bottom */
+left: 50%;
+transform: translateX(-50%);
+font-size: 12px; /*adjust font-size pepnding on paper and printer*/
+color: #000; 
+margin: 0; 
+}
+#printParagraph:before {
+        content: "Queue not valid without this ticket.";
+        display: block;
+        font-size: 14px; /*adjust font-size pepnding on paper and printer*/
+        color: #000;
+    }
+}
+
+@page {
+    size: 80mm 60mm; /* Adjust the width and height to fit your printer */
+    margin: 0;
+}

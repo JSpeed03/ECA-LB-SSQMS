@@ -1,0 +1,97 @@
+body {
+    background: #652eff;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background-color: #4d30aa;
+    padding: 30px;
+    padding-left:  80px;
+    padding-right: 80px;
+    border-radius: 5px;
+    width: 500px;
+  }
+  .user-type {
+    margin-bottom: 20px;
+  }
+  select, input {
+    background-color: white;
+    color: black;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+  }
+  input {
+    width: 96%;
+  }
+  p {
+    font-size: 24px;
+  }
+  .footer-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #222044;
+    padding: 10px;
+    text-align: center;
+  }
+  button[type="submit"],
+  button[type="button"] {
+    background-color: #e3ff37;
+    color: #000;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+}
+  .radio-container {
+    display: contents;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  input[type="radio"] {
+    /* Hide the default radio button */
+    visibility: hidden;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+  }
+
+  input[type="radio"] + label {
+    /* Style the label */
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    color: #000;
+    background-color: #d1d0ff;
+    border: 1px solid #ccc;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  input[type="radio"]:checked + label {
+    /* Style the checked state */
+    color: #fff;
+    background-color: #022cd8;
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  input[type="radio"]:checked + label:hover {
+    /* Add a hover effect to the checked state */
+    background-color: #0062cc;
+    border-color: #0062cc;
+  }

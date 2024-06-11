@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <link href="../logo/exact logo - HD.png" rel="icon">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="user-type">
+      <p>Please fill out the form</p>
+      <?php if (isset($_SESSION['error'])): ?>
+        <div id="error-message" style="color:red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+      <?php endif; ?>
+      <form id="myForm" method="post" action="review.php">
+        <label for="userType"></label>
+        <div class="radio-container">
+          <input type="radio" id="oldStudent" name="userType" value="1" required>
+          <label for="oldStudent">Old Student</label>
+        </div>
+        <div class="radio-container">
+          <input type="radio" id="newStudent" name="userType" value="2">
+          <label for="newStudent">New Student</label>
+        </div>
+        <div class="radio-container">
+          <input type="radio" id="visitor" name="userType" value="3">
+          <label for="visitor">Visitor</label>
+        </div><br><br>
+    
+        <input type="text" id="idNumber" name="idNumber" required placeholder="">
+    
+        <label for="department"></label>
+        <select id="department" name="department" required>
+            <option value="">Select a department or service</option>
+          
+
+        </select>
+        <select name="transaction" id="transaction" required>
+          <option value="">Select a transaction</option>
+   
+
+        </select>
+        <select name="program" id="program" style="display:none;">
+          <option value="">Select a program</option>
+      </select>
+    
+      
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  <footer class="footer-container">
+    <a href="../index.html">back</a>
+  </footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('department');
+    const transactionSelect = document.getElementById('transaction');
+    const programSelect = document.getElementById('program');
+
+    // Fetch department, transaction, and program data from the server
+    fetch('fetchData.php')
+        .then(response => response.json())
+        .then(data => {
+            // Populate the department dropdown
+            data.departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.departmentID;
+                option.text = department.Description;
+                departmentSelect.add(option);
+            });
+
+            // Handle department change event
+            departmentSelect.addEventListener('change', () => {
+                const selectedDepartmentID = departmentSelect.value;
+
+                // Clear existing transaction options
+                transactionSelect.innerHTML = '';
+
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.text = 'Select a transaction';
+                transactionSelect.add(defaultOption);
+
+                // Populate transaction dropdown based on selected department
+                data.transactions.forEach(transaction => {
+                    if (transaction.DepartmentID == selectedDepartmentID) {
+                        const option = document.createElement('option');
+                        option.value = transaction.transactionID;
+                        option.text = transaction.Description;
+                        transactionSelect.add(option);
+                    }
+                });
+
+                // Clear and hide the program select
+                programSelect.innerHTML = '';
+                const defaultProgramOption = document.createElement('option');
+                defaultProgramOption.value = '';
+                defaultProgramOption.text = 'Select a program';
+                programSelect.add(defaultProgramOption);
+                programSelect.style.display = 'none';
+            });
+
+            // Handle transaction change event
+            transactionSelect.addEventListener('change', () => {
+                const selectedTransactionID = transactionSelect.value;
+
+                // Clear existing program options
+                programSelect.innerHTML = '';
+
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.text = 'Select a program';
+                programSelect.add(defaultOption);
+
+                // Populate program dropdown based on selected transaction
+                data.program.forEach(program => {
+                    if (program.transaction_ID == selectedTransactionID) {
+                        const option = document.createElement('option');
+                        option.value = program.programID;
+                        option.text = program['Program Description'];
+                        programSelect.add(option);
+                    }
+                });
+
+                // Display the program select if it has more than one option
+                if (programSelect.options.length > 1) {
+                    programSelect.style.display = 'block';
+                } else {
+                    programSelect.style.display = 'none';
+                }
+            });
+        });
+});
+  // Placeholder management
+  const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+  const inputField = document.getElementById('idNumber');
+
+  userTypeRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      if (radio.value === '1') {
+        inputField.placeholder = 'Enter Student ID';
+      } else if (radio.value === '2') {
+        inputField.placeholder = 'Enter Your Name: Lastname, Firstname M.I.';
+      } else if (radio.value === '3') {
+        inputField.placeholder = 'Enter your Name: Lastname, Firstname M.I.';
+      }
+    });
+  });
+
+  // Set the inactivity timeout in milliseconds
+  const inactivityTimeout = 300000; // 5 minutes
+
+  // Set the inactivity timer
+  let inactivityTimer = setTimeout(() => {
+    // Redirect to the index page
+    window.location.href = '../index.html';
+  }, inactivityTimeout);
+
+  // Reset the inactivity timer on user activity
+  document.addEventListener('mousemove', () => {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      window.location.href = '../index.html';
+    }, inactivityTimeout);
+  });
+
+  document.addEventListener('keypress', () => {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      window.location.href = '../index.html';
+    }, inactivityTimeout);
+  });
+
+  
+  $('#myForm').on('submit', function(event) {
+    if ($('input[name="userType"]:checked').val() == 1) {
+    event.preventDefault();
+
+    const idNumber = $('#idNumber').val();
+
+    $.ajax({
+      url: 'validateIdNumber.php',
+      method: 'POST',
+      data: { idNumber: idNumber },
+      dataType: 'json',
+      async: false,
+      success: function(response) {
+        if (response.valid) {
+            console.log('ID number is valid, submitting form...');
+            $('#myForm').unbind('submit').submit();
+        } else {
+            $('#error-message').text('Error validating Student ID');
+            $('#error-message').show();
+        }
+      }
+    });
+  }
+});
+  </script>
+</body>
+</html>
