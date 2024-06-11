@@ -126,7 +126,7 @@ fetchNews();
   </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  let previousData = null;
+  let previousData = [];
 
   const fetchData = (date = null) => {
     let url = 'fetchdata.php';
@@ -146,29 +146,38 @@ document.addEventListener('DOMContentLoaded', function() {
         tableBody.innerHTML = '';
 
         if (Array.isArray(data) && data.length > 0) {
-          if (JSON.stringify(data) !== JSON.stringify(previousData)) {
-            const notificationSound = document.getElementById('notificationSound');
-            notificationSound.play();
-            previousData = data;
-          }
+          const newData = data.filter(row => !previousData.some(prevRow => JSON.stringify(prevRow) === JSON.stringify(row)));
 
-          data.forEach((row, index) => {
-  const tr = document.createElement('tr');
-  if (index < 10) {
-    tr.classList.add('initial-row');
-  } else {
-    tr.classList.add('additional-row');
-  }
-  tr.classList.add('new-row'); // Add a new CSS class to the newly added row
-  Object.values(row).forEach(cell => {
-    const td = document.createElement('td');
-    td.textContent = cell;
-    tr.appendChild(td);
-  });
-  tableBody.appendChild(tr);
-});
+          newData.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.classList.add('blink'); // Add blink class to new rows
+            Object.values(row).forEach(cell => {
+              const td = document.createElement('td');
+              td.textContent = cell;
+              tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+          });
 
+          // Remove the blink class after 5 seconds
+          setTimeout(() => {
+            document.querySelectorAll('.blink').forEach(el => el.classList.remove('blink'));
+          }, 5000);
 
+          // Append all rows (new and existing) to the table
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            if (!newData.includes(row)) { // If it's not a new row, don't add the blink class
+              Object.values(row).forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+              });
+              tableBody.appendChild(tr);
+            }
+          });
+
+          previousData = data; // Update previousData after processing
         } else {
           const tr = document.createElement('tr');
           const td = document.createElement('td');
@@ -192,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   fetchData();
 
-  setInterval(fetchData, 1000);
+  setInterval(fetchData, 500); // Fetch data every 5 seconds
 
   document.getElementById('filterDate').addEventListener('change', function() {
     const date = this.value;

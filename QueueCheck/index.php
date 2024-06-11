@@ -6,6 +6,7 @@ require '../DBConn.php';
 <html>
 <head>
   <title>Home</title>
+  <link href="../logo/exact logo - HD.png" rel="icon">
   <link rel="stylesheet" href="../Kiosk/style.css">
 </head>
 <body>

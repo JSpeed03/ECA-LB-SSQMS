@@ -76,7 +76,7 @@ body {
 .queue td:first-child {
   font-size: 60px;
   font-family: Arial;
-  width: 250px;
+  width: 200px;
 }
 
 .queue th {
@@ -203,20 +203,11 @@ z-index: -2;
   color: white;
 }
 
-.new-row {
-  animation: blink 1s infinite;
-  animation-delay: 0s;
-  animation-duration: 5s;
+@keyframes blink {
+  0%, 100% { background-color: white; color: black; }
+  50% { background-color: black; color: white; }
 }
 
-@keyframes blink {
-  0% {
-    background-color: #fff; /* Initial background color */
-  }
-  50% {
-    background-color: #000; /* Inverse background color */
-  }
-  100% {
-    background-color: #fff; /* Initial background color */
-  }
+.blink {
+  animation: blink 1s step-end infinite;
 }
