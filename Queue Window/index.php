@@ -97,7 +97,7 @@ function refreshPage() {
 
 function changeLogo() {
   const logoDiv = document.querySelector(".logo-div img");
-  const logos = ["exact logo - HD.png", "BSIS.png", "CBA.png", "Crim.png", "Educ.png", "Maritime.png", "Tourism.png", "NSTP.png", "SHS.png", "BSIS.png"]; // Add your logos here
+  const logos = ["exact logo - HD.png", "BSIS.png", "CBA.png", "Crim.png", "Educ.png", "BSIS.png", "Maritime.png", "Tourism.png", "NSTP.png", "SHS.png", "Nursing.png", "BSIS.png"]; // Add your logos here
   const randomLogo = logos[Math.floor(Math.random() * logos.length)];
   logoDiv.src = `../logo/${randomLogo}`;
 }
