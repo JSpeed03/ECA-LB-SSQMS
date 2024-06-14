@@ -374,7 +374,7 @@
 
       <h3>Time Created and Time Called</h3>
       <div id="chart_next"></div>
-      <h3>Time Time Called and Time Finish</h3>
+      <h3>Time Called and Time Finish</h3>
     <div id="chart"></div>
 
    

@@ -7,11 +7,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['queue_id'])) {
         // Retrieve the ID from the POST data
         $queue_id = $_POST['queue_id'];
-        $date = date('Y-m-d H:i:s');
+       
         $logged_in_department = $_SESSION['department_id'];
 
         
-        $update = "UPDATE `queue` SET `Status`='Called', `Time Called`='$date' WHERE `Queue identifier` = '$queue_id' ";
+        $update = "UPDATE `queue` SET `Status`='Called', `Time Called`=now() WHERE `Queue identifier` = '$queue_id' ";
 
         $res = mysqli_query($conn, $update);
 

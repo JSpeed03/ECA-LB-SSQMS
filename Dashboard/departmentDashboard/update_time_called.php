@@ -8,9 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['queue_id'])) {
       
         $queue_id = $_POST['queue_id'];
-        $date = date('Y-m-d H:i:s');
       
-        $sql_query = "SELECT `staffwindowID` FROM `staff-window` WHERE `Department id`='$logged_in_department' ";
+        $sql_query = "SELECT staffwindowID FROM `staff-window` WHERE `Department id`='$logged_in_department' ";
 
         $sql_res = mysqli_query($conn, $sql_query);
 
@@ -19,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = mysqli_fetch_assoc($sql_res);
                 $staff = $row['staffwindowID'];
 
-                $update = "UPDATE `queue` SET `Status`='Called', `Window_ID`='$staff', `Time Called`='$date' 
+                $update = "UPDATE queue SET `Status`='Called', `Window_ID`='$staff', `Time Called`=NOW() 
                 WHERE `Queue identifier` = '$queue_id'";
                 $res = mysqli_query($conn, $update);
 

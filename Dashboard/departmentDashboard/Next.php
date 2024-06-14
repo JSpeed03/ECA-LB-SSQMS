@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['queue_id'])) {
 
         $queue_id = $_POST['queue_id'];
-        $date = date('Y-m-d H:i:s');
+    
         $logged_in_department = $_SESSION['department_id'];
 
      
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }elseif ($step =='4') {
                     $step ='5';
                 }
-                $update = "UPDATE `queue` SET `Status`='Finish', `Time Finnished`='$date' WHERE `Queue identifier` = '$queue_id'";
+                $update = "UPDATE `queue` SET `Status`='Finish', `Time Finnished`=NOW() WHERE `Queue identifier` = '$queue_id'";
                 $res = mysqli_query($conn, $update);
 
    if ($res) {
@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     $next_id = $next_row['Queue identifier'];
          
                                     $update_next = "UPDATE `queue` SET `Status`='Called',`Window_ID`='$staff',
-                                     `Time Called`='$date' WHERE `Queue identifier` = '$next_id'";
+                                     `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
                                     $res_next = mysqli_query($conn, $update_next);
          
                                     if ($res_next) {
@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
                             $next_id = $next_row['Queue identifier'];
          
-                            $update_next = "UPDATE `queue` SET `Status`='Called', `Time Called`='$date' WHERE `Queue identifier` = '$next_id'";
+                            $update_next = "UPDATE `queue` SET `Status`='Called', `Window_ID`='$staff', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
                             $res_next = mysqli_query($conn, $update_next);
          
                             if ($res_next) {
@@ -191,7 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
                                     $next_id = $next_row['Queue identifier'];
          
-                                    $update_next = "UPDATE `queue` SET `Status`='Called',`Window_ID`='$staff', `Time Called`='$date' WHERE `Queue identifier` = '$next_id'";
+                                    $update_next = "UPDATE `queue` SET `Status`='Called', `Window_ID`='$staff', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
                                     $res_next = mysqli_query($conn, $update_next);
          
                                     if ($res_next) {
@@ -216,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
                             $next_id = $next_row['Queue identifier'];
          
-                            $update_next = "UPDATE `queue` SET `Status`='Called', `Time Called`='$date' WHERE `Queue identifier` = '$next_id'";
+                            $update_next = "UPDATE `queue` SET `Status`='Called', `Window_ID`='$staff', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
                             $res_next = mysqli_query($conn, $update_next);
          
                             if ($res_next) {
