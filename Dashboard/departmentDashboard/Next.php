@@ -8,10 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $queue_id = $_POST['queue_id'];
     
-        $logged_in_department = $_SESSION['department_id'];
+        $logged_in_account = $_SESSION['accountID'];
 
      
-        $sql_query1 = "SELECT `staffwindowID` FROM `staff-window` WHERE `Department id`='$logged_in_department'";
+        $sql_query1 = "SELECT `Window_ID` FROM `staff-window` WHERE `Staff id`='$logged_in_account'";
         $sql_res1 = mysqli_query($conn, $sql_query1);
 
 
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row1 = mysqli_fetch_assoc($sql_res1);
                 $row2 = mysqli_fetch_assoc($sql_res2);
 
-                $staff = $row1['staffwindowID'];
+                $staff = $row1['Window_ID'];
                 $step = $row2['Transaction Step'];
 
 
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          
                             if ($insert_result) {
                                
-                                $sql2 = "SELECT `Queue identifier` FROM queue WHERE `Time Created` = (SELECT MIN(`Time Created`) FROM queue WHERE Status='Pending' AND Department_ID = '$logged_in_department')";
+                                $sql2 = "SELECT `Queue identifier` FROM `queue` WHERE `Time Created` = (SELECT MIN(`Time Created`) FROM queue WHERE Status='Pending' AND `Staff ID` = '$logged_in_account')";
                                 $result2 = mysqli_query($conn, $sql2);
          
                                 if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {

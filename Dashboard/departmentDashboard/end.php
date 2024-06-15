@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }elseif ($step =='4') {
                     $step ='5';
                 }
-                $update = "UPDATE `queue` SET `Status`='Finish', `Time Finnished`=NOW() WHERE `Queue identifier` = '$queue_id'";
+                $update = "UPDATE `queue` SET `Status`='Finish', `Time Finnished`=NOw() WHERE `Queue identifier` = '$queue_id'";
                 $res = mysqli_query($conn, $update);
 
    if ($res) {
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             
             if ($transactionStep !== '5') {
-                if ($userTypeID == 1) {
+                if ($userTypeID = 1) {
 
                     if ( $transactionID == 17) {
                         if (in_array($departmentID, [1, 2, 4, 5, 8, 7, 11, 10, 9])) {
@@ -111,16 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $result2 = mysqli_query($conn, $sql2);
          
                                 if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
-                                    $next_id = $next_row['Queue identifier'];
-         
-                                    $update_next = "UPDATE `queue` SET `Status`='Called',`Window_ID`='$staff', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
-                                    $res_next = mysqli_query($conn, $update_next);
-         
-                                    if ($res_next) {
-                                        header("Location: index.php?success= Next Successfully Successfully");
-                                    } else {
-                                     header("Location: index.php?error= Next Successfully Successfully");
-                                    }
+                                    header("Location: index.php?error= No Called Queue");
                                 } else {
                                  header("Location: index.php?error= No Called Queue");
                                 }
@@ -136,16 +127,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $result2 = mysqli_query($conn, $sql2);
          
                         if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
-                            $next_id = $next_row['Queue identifier'];
-         
-                            $update_next = "UPDATE `queue` SET `Status`='Called', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
-                            $res_next = mysqli_query($conn, $update_next);
-         
-                            if ($res_next) {
-                                header("Location: index.php?success= Next Successfully Successfully");
-                            } else {
-                                echo "Error updating next queue entry: " . mysqli_error($conn);
-                            }
+                         
+                            header("Location: index.php?error= no Pending queue");
+                          
                         } else {
                          header("Location: index.php?error= no Pending queue");
                         }
@@ -185,16 +169,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $result2 = mysqli_query($conn, $sql2);
          
                                 if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
-                                    $next_id = $next_row['Queue identifier'];
+                                    header("Location: index.php?error= No Called Queue");
          
-                                    $update_next = "UPDATE `queue` SET `Status`='Called',`Window_ID`='$staff', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
-                                    $res_next = mysqli_query($conn, $update_next);
-         
-                                    if ($res_next) {
-                                        header("Location: index.php?success= Next Successfully Successfully");
-                                    } else {
-                                     header("Location: index.php?error= Next Successfully Successfully");
-                                    }
                                 } else {
                                  header("Location: index.php?error= No Called Queue");
                                 }
@@ -206,23 +182,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                          header("Location: index.php?error= No Called Queue");
                         }
                     }else{
-                        $sql2 = "SELECT `Queue identifier` FROM queue WHERE `Time Created` = (SELECT MIN(`Time Created`) FROM queue WHERE Status='Pending' AND Department_ID = '$departmentID')";
-                        $result2 = mysqli_query($conn, $sql2);
-         
-                        if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {
-                            $next_id = $next_row['Queue identifier'];
-         
-                            $update_next = "UPDATE `queue` SET `Status`='Called', `Time Called`=NOW() WHERE `Queue identifier` = '$next_id'";
-                            $res_next = mysqli_query($conn, $update_next);
-         
-                            if ($res_next) {
-                                header("Location: index.php?success= Next Successfully Successfully");
-                            } else {
-                                echo "Error updating next queue entry: " . mysqli_error($conn);
-                            }
-                        } else {
-                         header("Location: index.php?error= no Pending queue");
-                        }
+                  
+                         header("Location: index.php?success= no Pending queue");
+                      
                     }
                 }
               
