@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2024 at 01:50 PM
+-- Generation Time: Jun 15, 2024 at 09:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,7 +65,7 @@ INSERT INTO `departments` (`departmentID`, `Department_code`, `Description`, `st
 (2, 'Reg', 'Registrar Department', 1),
 (3, 'VPAA', 'VPAA Office', 0),
 (4, 'IS', 'IS Department', 1),
-(5, 'Mar', 'Maritime Department', 0),
+(5, 'Mar', 'Maritime Department', 1),
 (7, 'CBA', 'College of Business Administration', 0),
 (8, 'TM', 'Tourism Department', 0),
 (9, 'N', 'Nursing department', 0),
@@ -127,6 +127,13 @@ CREATE TABLE `queue` (
   `enrollment` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `queue`
+--
+
+INSERT INTO `queue` (`Queue identifier`, `Queue Number`, `User Type ID`, `Student ID`, `Name`, `Department_ID`, `Transaction ID`, `Transaction Step`, `Window_ID`, `Time Created`, `Time Called`, `Time Finnished`, `Status`, `enrollment`) VALUES
+(462, '1', 1, 2022008403, NULL, 1, 1, 1, 2, '2024-06-15 15:24:21', '2024-06-15 15:24:32', '2024-06-15 15:24:37', 'Finish', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -139,6 +146,13 @@ CREATE TABLE `queue_number_tracker` (
   `last_number` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `queue_number_tracker`
+--
+
+INSERT INTO `queue_number_tracker` (`departmentID`, `queue_date`, `last_number`) VALUES
+(1, '2024-06-15', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -148,7 +162,7 @@ CREATE TABLE `queue_number_tracker` (
 CREATE TABLE `staff-window` (
   `staffwindowID` int(11) NOT NULL,
   `Department id` int(11) NOT NULL,
-  `Window ID` int(11) NOT NULL,
+  `Window_ID` int(11) NOT NULL,
   `Staff ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -156,10 +170,11 @@ CREATE TABLE `staff-window` (
 -- Dumping data for table `staff-window`
 --
 
-INSERT INTO `staff-window` (`staffwindowID`, `Department id`, `Window ID`, `Staff ID`) VALUES
+INSERT INTO `staff-window` (`staffwindowID`, `Department id`, `Window_ID`, `Staff ID`) VALUES
 (7, 1, 1, 16),
 (8, 2, 5, 14),
-(9, 4, 9, 15);
+(9, 4, 9, 15),
+(14, 1, 2, 20);
 
 -- --------------------------------------------------------
 
@@ -185,7 +200,9 @@ INSERT INTO `staff_account` (`accountID`, `Username`, `Password`, `Authority_ID`
 (15, 'BSIS', '$2y$10$hWP.faN8UFHyVf1oa9ewBeZdN0CWSSTiy/wtrbX84pmNFLlKTLbg.', 2, 4),
 (16, 'Accounting', '$2y$10$TqLFBzf6SNWuStaQDIJEHeDBJVHmZTicfDjTxw6relU2bhnaYPpLi', 2, 1),
 (17, 'Joshua', '$2y$10$7TfOUsXoiOdD8QjOMwf7q.D7SlTqHkSHyAw2.WbpgWsTlnoUfU6m2', 5, NULL),
-(18, 'Admin', '$2y$10$lhHPNfSem6qLPkFfPVvLcewQE0rDYOKsygYwvhNfGllwqGR3leVRa', 3, NULL);
+(18, 'Admin', '$2y$10$lhHPNfSem6qLPkFfPVvLcewQE0rDYOKsygYwvhNfGllwqGR3leVRa', 3, NULL),
+(19, 'Maritime', '$2y$10$1Alp4OqkFFC7SbztB31.g.CVqLR8vIfSmxc/VmIioosBXdWblAZ3e', 2, 5),
+(20, 'Accounting2', '$2y$10$vK7SA3kq5AsJy11t3K5ILOTby6.N49Xiq0Xz5/XPgvPu.rWqNfH0q', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -236,7 +253,8 @@ INSERT INTO `transaction` (`transactionID`, `code`, `Description`, `DepartmentID
 (4, 'SAD C', 'SAD Checking', 4),
 (8, 'CAP C', 'Capstone Checking', 4),
 (17, 'Enrollment', 'Enrollment', 2),
-(18, 'TOR', 'TOR Release', 2);
+(18, 'TOR', 'TOR Release', 2),
+(19, 'Cons', 'Consultation', 5);
 
 -- --------------------------------------------------------
 
@@ -275,12 +293,12 @@ CREATE TABLE `window` (
 --
 
 INSERT INTO `window` (`windowID`, `window`) VALUES
-(1, 'ACCTG-1'),
-(2, 'ACCTG-2'),
-(3, 'ACCTG-3'),
-(4, 'ACCTG-4'),
-(5, 'REG-1'),
-(6, 'REG-2'),
+(1, 'ACCTG'),
+(2, 'ACCTG2'),
+(3, 'ACCTG3'),
+(4, 'ACCTG4'),
+(5, 'REG'),
+(6, 'REG2'),
 (9, 'IS'),
 (10, 'Mar'),
 (11, 'Crim'),
@@ -334,7 +352,7 @@ ALTER TABLE `queue_number_tracker`
 ALTER TABLE `staff-window`
   ADD PRIMARY KEY (`staffwindowID`),
   ADD KEY `Department id` (`Department id`),
-  ADD KEY `Window ID` (`Window ID`),
+  ADD KEY `Window ID` (`Window_ID`),
   ADD KEY `Staff ID` (`Staff ID`);
 
 --
@@ -397,25 +415,25 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `queue`
 --
 ALTER TABLE `queue`
-  MODIFY `Queue identifier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+  MODIFY `Queue identifier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
 
 --
 -- AUTO_INCREMENT for table `staff-window`
 --
 ALTER TABLE `staff-window`
-  MODIFY `staffwindowID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `staffwindowID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `staff_account`
 --
 ALTER TABLE `staff_account`
-  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user type`
@@ -444,11 +462,11 @@ ALTER TABLE `program`
 --
 ALTER TABLE `queue`
   ADD CONSTRAINT `Department` FOREIGN KEY (`Department_ID`) REFERENCES `departments` (`departmentID`),
-  ADD CONSTRAINT `Staff Window` FOREIGN KEY (`Window_ID`) REFERENCES `staff-window` (`staffwindowID`),
   ADD CONSTRAINT `Student ID` FOREIGN KEY (`Student ID`) REFERENCES `student` (`studID`),
   ADD CONSTRAINT `Transaction` FOREIGN KEY (`Transaction ID`) REFERENCES `transaction` (`transactionID`),
   ADD CONSTRAINT `User Type` FOREIGN KEY (`User Type ID`) REFERENCES `user type` (`usetypeID`),
-  ADD CONSTRAINT `queue_ibfk_1` FOREIGN KEY (`enrollment`) REFERENCES `program` (`programID`);
+  ADD CONSTRAINT `queue_ibfk_1` FOREIGN KEY (`enrollment`) REFERENCES `program` (`programID`),
+  ADD CONSTRAINT `queue_ibfk_2` FOREIGN KEY (`Window_ID`) REFERENCES `window` (`windowID`);
 
 --
 -- Constraints for table `queue_number_tracker`
@@ -461,7 +479,7 @@ ALTER TABLE `queue_number_tracker`
 --
 ALTER TABLE `staff-window`
   ADD CONSTRAINT `staff-window_ibfk_1` FOREIGN KEY (`Department id`) REFERENCES `departments` (`departmentID`),
-  ADD CONSTRAINT `staff-window_ibfk_2` FOREIGN KEY (`Window ID`) REFERENCES `window` (`windowID`),
+  ADD CONSTRAINT `staff-window_ibfk_2` FOREIGN KEY (`Window_ID`) REFERENCES `window` (`windowID`),
   ADD CONSTRAINT `staff-window_ibfk_3` FOREIGN KEY (`Staff ID`) REFERENCES `staff_account` (`accountID`);
 
 --
