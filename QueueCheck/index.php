@@ -61,7 +61,7 @@ require '../DBConn.php';
 
   </div>
   <footer class="footer-container">
-  <a href="../index.html">
+  <a href="../index.php">
     <button type="submit" style="background-color: #e3ff37; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer;">Home</button>
   </a>
   </footer>

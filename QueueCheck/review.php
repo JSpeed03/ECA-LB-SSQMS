@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       
 
         <a href="index.php"><button type="button">Check Another Queue</button></a>
-        <a href="../index.html">
+        <a href="../index.php">
             <button type="submit" style="background-color: #e3ff37; border: none; padding: 16px 30px; font-size: 16px; cursor: pointer;">Home</button>
         </a>
         <?php

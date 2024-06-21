@@ -20,12 +20,47 @@ function refreshPage() {
 <body >
   
   <div class="grid">
-    <div class="video-player">
-      <video autoplay loop controls muted>
-        <source src="../queue_screen_video/EXACT.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
+  <div class="video-player">
+  <?php
+  $videoFolder = '../queue_screen_video/';
+  $videoExtensions = ['mp4', 'webm', 'ogv']; // add more extensions if needed
+  $videos = [];
+
+  // Scan the directory for video files
+  foreach (scandir($videoFolder) as $file) {
+    $FileInfo = pathinfo($file);
+    if (in_array($FileInfo['extension'], $videoExtensions)) {
+      $videos[] = $FileInfo['basename'];
+    }
+  }
+
+  // Generate the video playlist
+  if (!empty($videos)) {
+    $currentVideo = array_shift($videos); // play the first video
+    echo '<video id="videoPlayer" autoplay controls muted>';
+    echo '<source src="'. $videoFolder. $currentVideo. '" type="video/'. pathinfo($currentVideo, PATHINFO_EXTENSION). '">';
+    echo 'Your browser does not support the video tag.';
+    echo '</video>';
+
+    // Add a script to cycle through the videos
+    echo '<script>';
+    echo 'var videos = ['. implode(',', array_map(function($video) {
+      return "'" . $video . "'";
+    }, $videos)). '];';
+    echo 'var videoPlayer = document.getElementById("videoPlayer");';
+    echo 'var videoIndex = 0;';
+    echo 'videoPlayer.addEventListener("ended", function() {';
+    echo '  videoIndex = (videoIndex + 1) % videos.length;';
+    echo '  videoPlayer.src = "'. $videoFolder. '" + videos[videoIndex];';
+    echo '  videoPlayer.load();';
+    echo '  videoPlayer.play();';
+    echo '});';
+    echo '</script>';
+  } else {
+    echo 'No videos found in the directory.';
+  }
+  ?>
+</div>
 
     
     <div class="queue" >
