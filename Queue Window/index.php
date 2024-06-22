@@ -34,31 +34,31 @@ function refreshPage() {
     }
   }
 
-  // Generate the video playlist
-  if (!empty($videos)) {
-    $currentVideo = array_shift($videos); // play the first video
-    echo '<video id="videoPlayer" autoplay controls muted>';
-    echo '<source src="'. $videoFolder. $currentVideo. '" type="video/'. pathinfo($currentVideo, PATHINFO_EXTENSION). '">';
-    echo 'Your browser does not support the video tag.';
-    echo '</video>';
+// Generate the video playlist
+if (!empty($videos)) {
+  $currentVideo = array_shift($videos); // play the first video
+  echo '<video id="videoPlayer" autoplay controls muted>';
+  echo '<source src="'. $videoFolder. $currentVideo. '" type="video/'. pathinfo($currentVideo, PATHINFO_EXTENSION). '">';
+  echo 'Your browser does not support the video tag.';
+  echo '</video>';
 
-    // Add a script to cycle through the videos
-    echo '<script>';
-    echo 'var videos = ['. implode(',', array_map(function($video) {
-      return "'" . $video . "'";
-    }, $videos)). '];';
-    echo 'var videoPlayer = document.getElementById("videoPlayer");';
-    echo 'var videoIndex = 0;';
-    echo 'videoPlayer.addEventListener("ended", function() {';
-    echo '  videoIndex = (videoIndex + 1) % videos.length;';
-    echo '  videoPlayer.src = "'. $videoFolder. '" + videos[videoIndex];';
-    echo '  videoPlayer.load();';
-    echo '  videoPlayer.play();';
-    echo '});';
-    echo '</script>';
-  } else {
-    echo 'No videos found in the directory.';
-  }
+  // Add a script to cycle through the videos
+  echo '<script>';
+  echo 'var videos = ['. implode(',', array_map(function($video) {
+    return "'" . $video . "'";
+  }, array_merge([$currentVideo], $videos))). '];';
+  echo 'var videoPlayer = document.getElementById("videoPlayer");';
+  echo 'var videoIndex = 0;';
+  echo 'videoPlayer.addEventListener("ended", function() {'; 
+  echo '  videoIndex = (videoIndex + 1) % videos.length;';
+  echo '  videoPlayer.src = "'. $videoFolder. '" + videos[videoIndex];';
+  echo '  videoPlayer.load();';
+  echo '  videoPlayer.play();';
+  echo '});';
+  echo '</script>';
+} else {
+  echo 'No videos found in the directory.';
+}
   ?>
 </div>
 
