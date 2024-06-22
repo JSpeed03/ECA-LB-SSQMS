@@ -10,7 +10,7 @@
             justify-content: center;
             align-items: center;
             margin: 0;
-            background-color: #0000ff;
+            background-color: #652eff;
             overflow: hidden;
         }
 
@@ -115,7 +115,7 @@
   // Generate the video playlist
   if (!empty($videos)) {
     $currentVideo = array_shift($videos); // play the first video
-    echo '<video id="videoPlayer" autoplay controls muted style="width: 100%; height: auto object-fit: cover;">';
+    echo '<video id="videoPlayer" autoplay controls muted style="width: 100%; height: auto; object-fit: cover; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">';
     echo '<source src="'. $videoFolder. $currentVideo. '" type="video/'. pathinfo($currentVideo, PATHINFO_EXTENSION). '">';
     echo 'Your browser does not support the video tag.';
     echo '</video>';
