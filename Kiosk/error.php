@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <h1>Error 404</h1>
-        <p>Invalid Student ID. Please check your ID number.</p>
+        <p>Student ID Not Found. Please check your ID number.</p>
         <button onclick="redirectToIndex()">Go Back</button>
     </div>
     <script>

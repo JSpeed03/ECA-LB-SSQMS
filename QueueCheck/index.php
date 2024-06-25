@@ -35,26 +35,26 @@ require '../DBConn.php';
     });
 
     // Set the inactivity timeout in milliseconds
-  const inactivityTimeout = 300000; // 5 minutes
+  const inactivityTimeout = 200000; // 3.333... minutes
 
   // Set the inactivity timer
   let inactivityTimer = setTimeout(() => {
     // Redirect to the index page
-    window.location.href = '../index.html';
+    window.location.href = '../index.php';
   }, inactivityTimeout);
 
   // Reset the inactivity timer on user activity
   document.addEventListener('mousemove', () => {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      window.location.href = '../index.html';
+      window.location.href = '../index.php';
     }, inactivityTimeout);
   });
 
   document.addEventListener('keypress', () => {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      window.location.href = '../index.html';
+      window.location.href = '../index.php';
     }, inactivityTimeout);
   });
 </script>

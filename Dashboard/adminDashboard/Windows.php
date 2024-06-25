@@ -1,12 +1,12 @@
 <?php
- session_start();
+ /*session_start();
  require '../../DBConn.php';
  // Check if the user is logged in
  if (!isset($_SESSION['accountID'])) {
      // Redirect to login page if not logged in
      header("Location: ../../sign-in");
      exit();
- }
+ }*/
 ?>
 
 <!doctype html>
@@ -317,7 +317,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="Transaction.php">
+              <a class="nav-link d-flex align-items-center gap-2 " href="Transaction.php">
                 <svg class="bi"><use xlink:href="#cart"/></svg>
                 Transactions
               </a>
@@ -335,7 +335,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="Windows.php">
+              <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="Windows.php">
                 <svg class="bi"><use xlink:href="#puzzle"/></svg>
                 Window Management
               </a>
@@ -367,18 +367,18 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Transaction</h1>
+        <h1 class="h2">Window Management</h1>
     </div>
 
-    <h1>Transaction</h1>
+    <h1>Window Management</h1>
     <div class="table-container">
         <table id="queueTable" class="table table-striped">
             <thead>
                 <tr class="sticky-top">
-                    <th>Transaction ID</th>
-                    <th>Transaction Code</th>
-                    <th>Description</th>
-                    <th>department ID</th>
+                    <th>Staff-Window ID</th>
+                    <th>Department ID</th>
+                    <th>Window ID</th>
+                    <th>Staff ID</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -389,169 +389,133 @@
     </div>
 
     <div class="form-container">
-    <form action="add_transaction.php" method="post">
-    <input type="text" id="transCode" name="transCode" required placeholder="Transaction Code"><br></br>
-    <input type="text" id="TransacDescrip" name="TransacDescrip" required placeholder="Transaction Description"><br></br>
+    <form action="add_window.php" method="post">
     <select id="departmentSelect" class="form-select" name="departmentSelect">
         <option value="" selected>Select Department</option>
+    </select></br>
+    <select id="windowtSelect" class="form-select" name="windowtSelect">
+        <option value="" selected>Select Window</option>
+    </select></br>
+    <select id="staffSelect" class="form-select" name="staffSelect">
+        <option value="" selected>Select Staff</option>
     </select></br>
     <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add</button>
 </form>
     </div>
+    
+
+   
 </main>
   <script src="../../assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const fetchData = (date = null) => {
-    let url = 'fetch_data_transaction.php';
-    if (date) {
-      url += `?date=${date}`;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const departmentSelect = document.getElementById('departmentSelect');
+    const windowSelect = document.getElementById('windowtSelect'); // Correct ID
+    const staffSelect = document.getElementById('staffSelect');
 
-    fetch(url)
-     .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-      })
-     .then(data => {
-        const tableBody = document.querySelector('#queueTable tbody');
-        tableBody.innerHTML = '';
+    // Fetch and populate department dropdown
+    fetch('fetch_department.php')
+        .then(response => response.json())
+        .then(data => {
+            data.departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.departmentID;
+                option.text = department.Description;
+                departmentSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching departments:', error));
 
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach((row, index) => {
-            const tr = document.createElement('tr');
-            if (index < 10) {
-              tr.classList.add('initial-row');
-            } else {
-              tr.classList.add('additional-row');
-            }
-            
-            Object.keys(row).forEach(key => {
-              const td = document.createElement('td');
-              td.textContent = row[key];
-              tr.appendChild(td);
+    // Fetch and populate window dropdown
+    fetch('fetch_windows.php')
+        .then(response => response.json())
+        .then(data => {
+            data.windows.forEach(window => {
+                const option = document.createElement('option');
+                option.value = window.windowID;
+                option.text = window.window;
+                windowSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching windows:', error));
+
+    // Fetch and populate staff dropdown
+    fetch('fetch_staff.php')
+        .then(response => response.json())
+        .then(data => {
+            data.staff.forEach(staff => {
+                const option = document.createElement('option');
+                option.value = staff.accountID;
+                option.text = staff.Username;
+                staffSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching staff:', error));
+
+    // Fetch and populate table data
+    const table = document.getElementById('queueTable');
+
+    fetch('fetch_window_data.php')
+        .then(response => response.json())
+        .then(data => {
+            table.tBodies[0].innerHTML = '';
+
+            data.forEach(item => {
+                const row = table.tBodies[0].insertRow();
+                row.innerHTML = `
+                    <td>${item.staffwindowID}</td>
+                    <td>${item.department_code}</td>
+                    <td>${item.window}</td>
+                    <td>${item.staff_username}</td>
+                    <td>
+                        <button class="btn btn-danger delete-button" data-staffwindowid="${item.staffwindowID}">Delete</button>
+                    </td>
+                `;
             });
 
-            // Add delete button to the last cell
-            const deleteTd = document.createElement('td');
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.style.backgroundColor = 'red'; // Set background color to red
-            deleteButton.style.color = 'white'; // Set text color to white
-            deleteButton.onclick = () => deleteTransaction(row.transactionID);
-            deleteTd.appendChild(deleteButton);
-            tr.appendChild(deleteTd);
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const staffwindowID = button.dataset.staffwindowid;
 
-            tableBody.appendChild(tr);
-          });
-        } else {
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 12;
-          td.textContent = 'No data available';
-          tr.appendChild(td);
-          tableBody.appendChild(tr);
-        }
-      })
-     .catch(error => {
-        console.error('Error fetching data:', error);
-        const tableBody = document.querySelector('#queueTable tbody');
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 12;
-        td.textContent = 'Error fetching data';
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-      });
-  };
+                    if (confirm(`Are you sure you want to delete Window ID ${staffwindowID}?`)) {
+                        fetch('delete_window.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                staffwindowID: staffwindowID
+                            })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error('Error deleting record');
+                            }
+                        })
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                alert(data.message);
 
-  fetchData();
-
-  document.getElementById('filterDate').addEventListener('change', function() {
-    const date = this.value;
-    fetchData(date);
-  });
-});
-
-function deleteTransaction(transactionID) {
-  if (confirm('Are you sure you want to delete this transaction?')) {
-    fetch('delete_transaction.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ transactionID: transactionID })
-    })
-   .then(response => response.json())
-    'use strict';
-
-    if (response.ok) {
-      alert('Transaction deleted successfully!');
-      // Optionally, reload the page or remove the deleted row from the table
-      location.reload();
-    } else {
-      alert('Error deleting transaction: ' + response.error);
-    }
-  }
-}
-
-function fetchTransactions() {
-  fetch('fetch_data_transaction.php')
-   .then(response => response.json())
-   .then(data => {
-      const tableBody = document.querySelector('#queueTable tbody');
-      tableBody.innerHTML = ''; // Clear existing rows
-
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${row.transactionID}</td>
-          <td>${row.transactionCode}</td>
-          <td>${row.description}</td>
-          <td>${row.departmentID}</td>
-          <td></td> <!-- Empty cell for the delete button -->
-        `;
-        // Add delete button to the last cell
-        const deleteTd = tr.querySelector('td:last-child');
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.style.backgroundColor = 'red'; // Set background color to red
-        deleteButton.style.color = 'white'; // Set text color to white
-        deleteButton.onclick = () => deleteTransaction(row.transactionID);
-        deleteTd.appendChild(deleteButton);
-        
-        tableBody.appendChild(tr);
-      });
-    })
-   .catch(error => {
-      console.error('Error fetching transactions:', error);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Fetch departments from the server
-  fetch('fetch_department.php')
-    .then(response => response.json())
-    .then(data => {
-      // Get the dropdown element
-      const departmentSelect = document.getElementById('departmentSelect');
-      
-      // Clear any existing options (except the default one)
-      departmentSelect.innerHTML = '<option value="" selected>Select Department</option>';
-
-      // Populate the department dropdown
-      data.departments.forEach(department => {
-        const option = document.createElement('option');
-        option.value = department.departmentID; // Using 'departmentID' as the value
-        option.text = department.Description;   // Using 'Description' as the display text
-        departmentSelect.add(option);
-      });
-  })
-    .catch(error => console.error('Error fetching departments:', error));
+                                const row = button.closest('tr');
+                                row.parentNode.removeChild(row);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting record:', error);
+                            alert('Error deleting record');
+                        });
+                    }
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
 });
 </script>
 
