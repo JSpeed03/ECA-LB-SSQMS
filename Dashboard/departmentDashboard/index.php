@@ -335,12 +335,7 @@ $_SESSION['department_name'] = $department_name;
               </a>
             </li>
          
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
-                <svg class="bi"><use xlink:href="#puzzle"/></svg>
-                Options
-              </a>
-            </li>
+           
           </ul>
 
           
@@ -350,12 +345,12 @@ $_SESSION['department_name'] = $department_name;
           <ul class="nav flex-column mb-auto">
             
             <li class="nav-item">
-            <li class="nav-item">
+            <!--<li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="settings.php">
                   <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
                  Change Password
                 </a>
-              </li>
+              </li>-->
               <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                   <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
