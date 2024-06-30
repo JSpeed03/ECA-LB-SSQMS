@@ -154,7 +154,7 @@ async function fetchNews() { //limit of 52 character max space include
   
 
 setInterval(updateClock, 1000);
-setInterval(changeLogo, 2000); // Change logo every 2 seconds
+setInterval(changeLogo, 5000); // Change logo every 5 seconds
 updateClock();
 changeLogo();
 fetchNews();

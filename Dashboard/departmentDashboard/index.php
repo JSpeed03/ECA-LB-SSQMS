@@ -186,6 +186,15 @@ $_SESSION['department_name'] = $department_name;
     padding: 0.5rem 0.75rem;
   }
 }
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem; /* Space between icon and text */
+}
+
+
 </style>
 
     
@@ -345,12 +354,12 @@ $_SESSION['department_name'] = $department_name;
           <ul class="nav flex-column mb-auto">
             
             <li class="nav-item">
-            <!--<li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="settings.php">
                   <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
                  Change Password
                 </a>
-              </li>-->
+              </li>
               <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                   <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
@@ -425,7 +434,7 @@ $_SESSION['department_name'] = $department_name;
     }
     ?>
     <button type="submit" class="btn btn-lg btn-primary">
-        <i class="bi bi-plus-circle-fill" style="margin-right: 0.5rem"></i>
+        <i class="bi bi-plus-circle-fill" style="margin-bottom: 30%"></i>
         Call
     </button>
 </form>
@@ -453,7 +462,7 @@ $_SESSION['department_name'] = $department_name;
     }
     ?>
     <button type="submit" class="btn btn-lg btn-secondary">
-        <i class="bi bi-arrow-repeat" style="margin-right: 0.5rem"></i>
+        <i class="bi bi-arrow-repeat" style="margin-bottom: 15%"></i>
         Call Again
     </button>
     </form>
@@ -479,7 +488,7 @@ $_SESSION['department_name'] = $department_name;
     }
     ?>
     <button type="submit" id="nextbtn" class="btn btn-lg btn-success">
-        <i class="bi bi-arrow-right-circle-fill" style="margin-right: 0.5rem"></i>
+        <i class="bi bi-arrow-right-circle-fill" style="margin-bottom: 30%"></i>
         Next
     </button>
    
@@ -506,7 +515,7 @@ $_SESSION['department_name'] = $department_name;
     }
     ?>
     <button type="submit" class="btn btn-lg btn-danger">
-        <i class="bi bi-x-circle-fill" style="margin-right: 0.5rem"></i>
+        <i class="bi bi-x-circle-fill" style="margin-bottom: 30%"></i>
         End
     </button>
     </form>

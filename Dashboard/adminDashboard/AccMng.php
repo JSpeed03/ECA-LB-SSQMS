@@ -395,12 +395,12 @@ background-color: lightblue;
   <form action="Add_User.php" method="POST">
   <div class="md-1">
     <label for="inputEmail" class="form-label">User Name</label>
-    <input type="text" class="form-control" name="uname" placeholder="Input User Name" >
+    <input type="text" class="form-control" name="uname" placeholder="Input User Name" required>
   </div>
   <div class="md-1">
   <label for="inputEmail" class="form-label">Select Auhtority</label>
 
-    <select class="form-select" name="authority">
+    <select class="form-select" name="authority" required>
       <option selected>Choose Authority...</option>
       <?php
         require '../.././DBConn.php';
@@ -418,7 +418,7 @@ background-color: lightblue;
   </div>
   <div class="md-1">
   <label for="inputEmail" class="form-label">Select Department</label>
-    <select class="form-select" name="department" >
+    <select class="form-select" name="department" required>
       <option selected>Choose  Department...</option>
       <?php
         require '../.././DBConn.php';
@@ -436,11 +436,11 @@ background-color: lightblue;
   </div>
   <div class="cmd-1">
     <label for="inputEmail" class="form-label">Password</label>
-    <input type="text" class="form-control" name="password" placeholder="Input Password">
+    <input type="text" class="form-control" name="password" placeholder="Input Password" required>
   </div>
   <div class="md-1">
     <label for="inputEmail" class="form-label">Confirm Password</label>
-    <input type="text" class="form-control" name="confirm" placeholder="Confirm Passsword">
+    <input type="text" class="form-control" name="confirm" placeholder="Confirm Passsword" required>
   </div>
 
   <div class="buttonContainer">
@@ -636,10 +636,10 @@ background-color: lightblue;
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Accounts Management</h1>
+          <h1>Accounts Management</h1>
         </div>
 
-        <h1>Accounts</h1>
+        <h2>User Account Details</h2>
 
         <div class="table-container">
           <div class="btn-container">

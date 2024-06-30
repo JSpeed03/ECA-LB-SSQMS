@@ -367,11 +367,15 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Transaction</h1>
+        <h1>Department Transaction Management</h1>
     </div>
 
-    <h1>Transaction</h1>
+    <h2>Department Transaction Details</h2>
     <div class="table-container">
+      <div class="d-flex mb-3">
+        <input type="text" id="searchInput" class="form-control me-2" placeholder="Search...">
+        <button type="button" id="searchButton" class="btn btn-primary">Search</button>
+      </div>
         <table id="queueTable" class="table table-striped">
             <thead>
                 <tr class="sticky-top">
@@ -590,6 +594,32 @@ function cancelEdit() {
     `;
     fetchDepartments();
 }
+
+document.getElementById('searchButton').addEventListener('click', () => {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const tableRows = document.querySelectorAll('#queueTable tbody tr');
+
+  tableRows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    let shouldShow = false;
+
+    cells.forEach(cell => {
+      if (cell.textContent.toLowerCase().includes(searchTerm)) {
+        shouldShow = true;
+      }
+    });
+
+    if (shouldShow) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', () => {
+  document.getElementById('searchButton').click();
+});
 </script>
 
 </body>

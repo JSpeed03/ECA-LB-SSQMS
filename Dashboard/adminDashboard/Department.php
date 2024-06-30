@@ -426,11 +426,15 @@ input:checked + .slider:before {
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Department</h1>
+        <h1>Department Management</h1>
     </div>
 
-    <h1>Departments</h1>
+    <h1>Department Details</h1>
     <div class="table-container">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+        <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
+      </div>
         <table id="queueTable" class="table table-striped">
             <thead>
                 <tr class="sticky-top">
@@ -660,6 +664,34 @@ function cancelEdit() {
         </form>
     `;
 }
+
+document.getElementById('searchButton').addEventListener('click', function() {
+  var input = document.getElementById('searchInput').value.toLowerCase();
+  var table = document.getElementById('queueTable');
+  var rows = table.rows;
+
+  for (var i = 1; i < rows.length; i++) {
+    var cells = rows[i].cells;
+    var match = false;
+
+    for (var j = 0; j < cells.length; j++) {
+      if (cells[j].textContent.toLowerCase().includes(input)) {
+        match = true;
+        break;
+      }
+    }
+
+    if (match) {
+      rows[i].style.display = '';
+    } else {
+      rows[i].style.display = 'none';
+    }
+  }
+});
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  document.getElementById('searchButton').click();
+});
 </script>
 
 </body>
