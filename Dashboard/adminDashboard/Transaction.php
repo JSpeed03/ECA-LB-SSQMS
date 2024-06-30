@@ -390,11 +390,11 @@
 
     <div class="form-container">
     <form action="add_transaction.php" method="post">
-    <input type="text" id="transCode" name="transCode" required placeholder="Transaction Code"><br></br>
-    <input type="text" id="TransacDescrip" name="TransacDescrip" required placeholder="Transaction Description"><br></br>
+    <input type="text" id="transCode" name="transCode" required placeholder="Transaction Code"><br><br>
+    <input type="text" id="TransacDescrip" name="TransacDescrip" required placeholder="Transaction Description"><br><br>
     <select id="departmentSelect" class="form-select" name="departmentSelect">
         <option value="" selected>Select Department</option>
-    </select></br>
+    </select><br>
     <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add</button>
 </form>
     </div>
@@ -404,155 +404,192 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const fetchData = (date = null) => {
+    fetchData();
+    fetchDepartments(); // Fetch departments for the initial load
+});
+
+function fetchData(date = null) {
     let url = 'fetch_data_transaction.php';
     if (date) {
-      url += `?date=${date}`;
+        url += `?date=${date}`;
     }
 
     fetch(url)
-     .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-      })
-     .then(data => {
-        const tableBody = document.querySelector('#queueTable tbody');
-        tableBody.innerHTML = '';
-
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach((row, index) => {
-            const tr = document.createElement('tr');
-            if (index < 10) {
-              tr.classList.add('initial-row');
-            } else {
-              tr.classList.add('additional-row');
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
             }
-            
-            Object.keys(row).forEach(key => {
-              const td = document.createElement('td');
-              td.textContent = row[key];
-              tr.appendChild(td);
-            });
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.querySelector('#queueTable tbody');
+            tableBody.innerHTML = '';
 
-            // Add delete button to the last cell
-            const deleteTd = document.createElement('td');
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.style.backgroundColor = 'red'; // Set background color to red
-            deleteButton.style.color = 'white'; // Set text color to white
-            deleteButton.onclick = () => deleteTransaction(row.transactionID);
-            deleteTd.appendChild(deleteButton);
-            tr.appendChild(deleteTd);
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach((row, index) => {
+                    const tr = document.createElement('tr');
+                    if (index < 10) {
+                        tr.classList.add('initial-row');
+                    } else {
+                        tr.classList.add('additional-row');
+                    }
 
+                    Object.keys(row).forEach(key => {
+                        const td = document.createElement('td');
+                        td.textContent = row[key];
+                        tr.appendChild(td);
+                    });
+
+                    const actionTd = document.createElement('td');
+                    
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.style.backgroundColor = 'blue';
+                    editButton.style.color = 'white';
+                    editButton.onclick = () => editTransaction(row.transactionID, row.transactionCode, row.description, row.departmentID);
+                    actionTd.appendChild(editButton);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.style.backgroundColor = 'red';
+                    deleteButton.style.color = 'white';
+                    deleteButton.onclick = () => deleteTransaction(row.transactionID);
+                    actionTd.appendChild(deleteButton);
+                    
+                    tr.appendChild(actionTd);
+
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 5;
+                td.textContent = 'No data available';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            const tableBody = document.querySelector('#queueTable tbody');
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 5;
+            td.textContent = 'Error fetching data';
+            tr.appendChild(td);
             tableBody.appendChild(tr);
-          });
-        } else {
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 12;
-          td.textContent = 'No data available';
-          tr.appendChild(td);
-          tableBody.appendChild(tr);
-        }
-      })
-     .catch(error => {
-        console.error('Error fetching data:', error);
-        const tableBody = document.querySelector('#queueTable tbody');
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 12;
-        td.textContent = 'Error fetching data';
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-      });
-  };
-
-  fetchData();
-
-  document.getElementById('filterDate').addEventListener('change', function() {
-    const date = this.value;
-    fetchData(date);
-  });
-});
-
-function deleteTransaction(transactionID) {
-  if (confirm('Are you sure you want to delete this transaction?')) {
-    fetch('delete_transaction.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ transactionID: transactionID })
-    })
-   .then(response => response.json())
-    'use strict';
-
-    if (response.ok) {
-      alert('Transaction deleted successfully!');
-      // Optionally, reload the page or remove the deleted row from the table
-      location.reload();
-    } else {
-      alert('Error deleting transaction: ' + response.error);
-    }
-  }
+        });
 }
 
-function fetchTransactions() {
-  fetch('fetch_data_transaction.php')
-   .then(response => response.json())
-   .then(data => {
-      const tableBody = document.querySelector('#queueTable tbody');
-      tableBody.innerHTML = ''; // Clear existing rows
+function fetchDepartments(selectedDepartmentID = null, callback = null) {
+    fetch('fetch_department.php')
+        .then(response => response.json())
+        .then(data => {
+            const departmentSelects = document.querySelectorAll('#departmentSelect, #EditDepartmentSelect');
+            departmentSelects.forEach(departmentSelect => {
+                departmentSelect.innerHTML = '<option value="" selected>Select Department</option>';
 
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${row.transactionID}</td>
-          <td>${row.transactionCode}</td>
-          <td>${row.description}</td>
-          <td>${row.departmentID}</td>
-          <td></td> <!-- Empty cell for the delete button -->
-        `;
-        // Add delete button to the last cell
-        const deleteTd = tr.querySelector('td:last-child');
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.style.backgroundColor = 'red'; // Set background color to red
-        deleteButton.style.color = 'white'; // Set text color to white
-        deleteButton.onclick = () => deleteTransaction(row.transactionID);
-        deleteTd.appendChild(deleteButton);
-        
-        tableBody.appendChild(tr);
-      });
-    })
-   .catch(error => {
-      console.error('Error fetching transactions:', error);
+                data.departments.forEach(department => {
+                    const option = document.createElement('option');
+                    option.value = department.departmentID;
+                    option.text = department.Description;
+                    departmentSelect.add(option);
+                });
+
+                if (selectedDepartmentID) {
+                    departmentSelect.value = selectedDepartmentID;
+                }
+            });
+
+            if (callback) callback();
+        })
+        .catch(error => console.error('Error fetching departments:', error));
+}
+
+function deleteTransaction(transactionID) {
+    if (confirm('Are you sure you want to delete this transaction?')) {
+        fetch('delete_transaction.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ transactionID: transactionID })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Transaction deleted successfully!');
+                location.reload();
+            } else {
+                alert('Error deleting transaction: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting transaction:', error);
+        });
+    }
+}
+
+function editTransaction(transactionID, transactionCode, description, departmentID) {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="editForm">
+            <input type="hidden" id="TransactionID" name="TransactionID" value="${transactionID}" required>
+            <input type="text" id="EditTransactionCode" name="transactionCode" value="${transactionCode}" required placeholder="Transaction Code"><br><br>
+            <input type="text" id="EditTransactionDescription" name="description" value="${description}" required placeholder="Transaction Description"><br><br>
+            <select id="EditDepartmentSelect" class="form-select" name="departmentID" required></select><br><br>
+            <button type="button" onclick="updateTransaction()">Update</button>
+            <button type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+    `;
+
+    fetchDepartments(departmentID, () => {
+        const editDepartmentSelect = document.getElementById('EditDepartmentSelect');
+        editDepartmentSelect.value = departmentID;
     });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Fetch departments from the server
-  fetch('fetch_department.php')
-    .then(response => response.json())
-    .then(data => {
-      // Get the dropdown element
-      const departmentSelect = document.getElementById('departmentSelect');
-      
-      // Clear any existing options (except the default one)
-      departmentSelect.innerHTML = '<option value="" selected>Select Department</option>';
+function updateTransaction() {
+    const form = document.getElementById('editForm');
+    const formData = new FormData(form);
 
-      // Populate the department dropdown
-      data.departments.forEach(department => {
-        const option = document.createElement('option');
-        option.value = department.departmentID; // Using 'departmentID' as the value
-        option.text = department.Description;   // Using 'Description' as the display text
-        departmentSelect.add(option);
-      });
-  })
-    .catch(error => console.error('Error fetching departments:', error));
-});
+    fetch('update_transaction.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Transaction updated successfully!');
+            location.reload();
+        } else {
+            alert('Error updating transaction: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating transaction:', error);
+    });
+}
+
+function cancelEdit() {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="addForm" action="add_transaction.php" method="post">
+            <input type="text" id="transCode" name="transCode" required placeholder="Transaction Code"><br><br>
+            <input type="text" id="TransacDescrip" name="TransacDescrip" required placeholder="Transaction Description"><br><br>
+            <select id="departmentSelect" class="form-select" name="departmentSelect">
+                <option value="" selected>Select Department</option>
+            </select><br>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add</button>
+        </form>
+    `;
+    fetchDepartments();
+}
 </script>
 
 </body>

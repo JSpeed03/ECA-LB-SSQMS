@@ -331,6 +331,60 @@ background-color: lightblue;
   </div>
   </div>
 </div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="edit_user.php" method="POST">
+                    <input type="hidden" class="form-control" id="edit_id" name="accountID">
+                    <div class="mb-3">
+                        <label for="edit_uname" class="form-label">User Name</label>
+                        <input type="text" class="form-control" name="uname" id="edit_uname" placeholder="Input User Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_authority" class="form-label">Select Authority</label>
+                        <select class="form-select" name="authority" id="edit_authority">
+                            <option value="">Choose Authority...</option>
+                            <?php
+                                require '../.././DBConn.php';
+                                $query = "SELECT authorityID, `description` FROM authority";
+                                $result = mysqli_query($conn, $query);
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<option value='" . $row['authorityID'] . "'>" . $row['description'] . "</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_department" class="form-label">Select Department</label>
+                        <select class="form-select" name="department" id="edit_department">
+                            <option value="">Choose Department...</option>
+                            <?php
+                                require '../.././DBConn.php';
+                                $query = "SELECT departmentID, `Description` FROM departments";
+                                $result = mysqli_query($conn, $query);
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<option value='" . $row['departmentID'] . "'>" . $row['Description'] . "</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="buttonContainer">
+                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
     <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document"></div>
@@ -595,6 +649,7 @@ background-color: lightblue;
           <table id="queueTable" class="table table-striped">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Username</th>
                 <th>Department</th>
                 <th>Role</th>
@@ -621,10 +676,15 @@ if ($result->num_rows > 0) {
       ?>
       <tr>
       <input type="hidden" class="record-id"  value="<?php echo $row['accountID'] ?>">
+      <td><?php echo $row['accountID'] ?></td>
       <td><?php echo $row['uname'] ?></td>
       <td><?php echo $row['department_name'] ?></td>
       <td><?php echo $row['position'] ?></td>
-      <td><button class="delbtn">Delete</button></td>
+      <td>
+        <button class="editbtn">Edit</button>
+        <button class="delbtn">Delete</button>
+      </td>
+
       </tr>
 <?php
   }
@@ -673,6 +733,47 @@ if ($result->num_rows > 0) {
             });
         });
     </script>	
+    
+    <script>
+$(document).ready(function () {
+    $('#queueTable').DataTable({
+        "dom": "ft", // Show the search input (f) and the table (t)
+        "paging": false, // Disable pagination
+        "info": false // Disable the "Showing X to Y of Z entries" information
+    });
+    $(document).on('click', '.editbtn', function () {
+        $('#editModal').modal('show');
+        var $tr = $(this).closest('tr');
+        var recordId = $tr.find('.record-id').val();
+        var data = $tr.children("td").map(function () {
+            return $(this).text();
+        }).get();
+
+        $('#edit_id').val(recordId);
+        $('#edit_uname').val(data[1]); // Assuming the Username is the second column
+
+        // Set the selected option for Authority and Department using values from the table
+        var departmentText = data[2]; // Assuming Department is the third column
+        var authorityText = data[3]; // Assuming Authority is the fourth column
+
+        $('#edit_department option').filter(function () {
+            return $(this).text() === departmentText;
+        }).prop('selected', true);
+
+        $('#edit_authority option').filter(function () {
+            return $(this).text() === authorityText;
+        }).prop('selected', true);
+    });
+
+    $(document).on('click', '.delbtn', function () {
+        $('#delete').modal('show');
+        var $tr = $(this).closest('tr');
+        var recordId = $tr.find('.record-id').val();
+        $('#delete_id').val(recordId);
+    });
+});
+
+    </script>
 
 </body>
 </html>

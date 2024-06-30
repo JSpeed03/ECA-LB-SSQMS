@@ -412,10 +412,10 @@
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const departmentSelect = document.getElementById('departmentSelect');
-    const windowSelect = document.getElementById('windowtSelect'); // Correct ID
+    const windowSelect = document.getElementById('windowtSelect');
     const staffSelect = document.getElementById('staffSelect');
 
-    // Fetch and populate department dropdown
+    // Fetch and populate dropdowns
     fetch('fetch_department.php')
         .then(response => response.json())
         .then(data => {
@@ -428,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching departments:', error));
 
-    // Fetch and populate window dropdown
     fetch('fetch_windows.php')
         .then(response => response.json())
         .then(data => {
@@ -441,7 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching windows:', error));
 
-    // Fetch and populate staff dropdown
     fetch('fetch_staff.php')
         .then(response => response.json())
         .then(data => {
@@ -455,11 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error fetching staff:', error));
 
     // Fetch and populate table data
-    const table = document.getElementById('queueTable');
-
     fetch('fetch_window_data.php')
         .then(response => response.json())
         .then(data => {
+            const table = document.getElementById('queueTable');
             table.tBodies[0].innerHTML = '';
 
             data.forEach(item => {
@@ -470,9 +467,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${item.window}</td>
                     <td>${item.staff_username}</td>
                     <td>
+                        <button class="btn btn-primary edit-button" data-staffwindowid="${item.staffwindowID}" data-departmentid="${item.departmentID}" data-windowid="${item.windowID}" data-staffid="${item.staffID}">Edit</button>
                         <button class="btn btn-danger delete-button" data-staffwindowid="${item.staffwindowID}">Delete</button>
                     </td>
                 `;
+            });
+
+            const editButtons = document.querySelectorAll('.edit-button');
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const staffwindowID = button.dataset.staffwindowid;
+                    const departmentID = button.dataset.departmentid;
+                    const windowID = button.dataset.windowid;
+                    const staffID = button.dataset.staffid;
+
+                    editWindow(staffwindowID, departmentID, windowID, staffID);
+                });
             });
 
             const deleteButtons = document.querySelectorAll('.delete-button');
@@ -490,21 +500,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 staffwindowID: staffwindowID
                             })
                         })
-                        .then(response => {
-                            if (response.ok) {
-                                return response.json();
-                            } else {
-                                throw new Error('Error deleting record');
-                            }
-                        })
+                        .then(response => response.json())
                         .then(data => {
                             if (data.error) {
                                 alert(data.error);
                             } else {
                                 alert(data.message);
-
-                                const row = button.closest('tr');
-                                row.parentNode.removeChild(row);
+                                button.closest('tr').remove();
                             }
                         })
                         .catch(error => {
@@ -517,6 +519,159 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching data:', error));
 });
+
+function editWindow(staffwindowID, departmentID, windowID, staffID) {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="editForm">
+            <input type="hidden" id="staffwindowID" name="staffwindowID" value="${staffwindowID}" required>
+            <select id="EditDepartmentSelect" class="form-select" name="departmentID" required></select><br>
+            <select id="EditWindowSelect" class="form-select" name="windowID" required></select><br>
+            <select id="EditStaffSelect" class="form-select" name="staffID" required></select><br>
+            <button type="button" onclick="updateWindow()">Update</button>
+            <button type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+    `;
+
+    populateEditForm(departmentID, windowID, staffID);
+}
+
+function populateEditForm(departmentID, windowID, staffID) {
+    fetch('fetch_department.php')
+        .then(response => response.json())
+        .then(data => {
+            const editDepartmentSelect = document.getElementById('EditDepartmentSelect');
+            editDepartmentSelect.innerHTML = '<option value="" selected>Select Department</option>';
+
+            data.departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.departmentID;
+                option.text = department.Description;
+                editDepartmentSelect.add(option);
+            });
+
+            editDepartmentSelect.value = departmentID;
+        })
+        .catch(error => console.error('Error fetching departments:', error));
+
+    fetch('fetch_windows.php')
+        .then(response => response.json())
+        .then(data => {
+            const editWindowSelect = document.getElementById('EditWindowSelect');
+            editWindowSelect.innerHTML = '<option value="" selected>Select Window</option>';
+
+            data.windows.forEach(window => {
+                const option = document.createElement('option');
+                option.value = window.windowID;
+                option.text = window.window;
+                editWindowSelect.add(option);
+            });
+
+            editWindowSelect.value = windowID;
+        })
+        .catch(error => console.error('Error fetching windows:', error));
+
+    fetch('fetch_staff.php')
+        .then(response => response.json())
+        .then(data => {
+            const editStaffSelect = document.getElementById('EditStaffSelect');
+            editStaffSelect.innerHTML = '<option value="" selected>Select Staff</option>';
+
+            data.staff.forEach(staff => {
+                const option = document.createElement('option');
+                option.value = staff.accountID;
+                option.text = staff.Username;
+                editStaffSelect.add(option);
+            });
+
+            editStaffSelect.value = staffID;
+        })
+        .catch(error => console.error('Error fetching staff:', error));
+}
+
+function updateWindow() {
+    const form = document.getElementById('editForm');
+    const formData = new FormData(form);
+
+    fetch('update_window.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Window updated successfully!');
+            location.reload();
+        } else {
+            alert('Error updating window: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating window:', error);
+    });
+}
+
+function cancelEdit() {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="addForm" action="add_window.php" method="post">
+            <select id="departmentSelect" class="form-select" name="departmentSelect">
+                <option value="" selected>Select Department</option>
+            </select><br>
+            <select id="windowtSelect" class="form-select" name="windowtSelect">
+                <option value="" selected>Select Window</option>
+            </select><br>
+            <select id="staffSelect" class="form-select" name="staffSelect">
+                <option value="" selected>Select Staff</option>
+            </select><br>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add</button>
+        </form>
+    `;
+    fetch('fetch_department.php')
+        .then(response => response.json())
+        .then(data => {
+            const departmentSelect = document.getElementById('departmentSelect');
+            departmentSelect.innerHTML = '<option value="" selected>Select Department</option>';
+
+            data.departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.departmentID;
+                option.text = department.Description;
+                departmentSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching departments:', error));
+
+    fetch('fetch_windows.php')
+        .then(response => response.json())
+        .then(data => {
+            const windowSelect = document.getElementById('windowtSelect');
+            windowSelect.innerHTML = '<option value="" selected>Select Window</option>';
+
+            data.windows.forEach(window => {
+                const option = document.createElement('option');
+                option.value = window.windowID;
+                option.text = window.window;
+                windowSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching windows:', error));
+
+    fetch('fetch_staff.php')
+        .then(response => response.json())
+        .then(data => {
+            const staffSelect = document.getElementById('staffSelect');
+            staffSelect.innerHTML = '<option value="" selected>Select Staff</option>';
+
+            data.staff.forEach(staff => {
+                const option = document.createElement('option');
+                option.value = staff.accountID;
+                option.text = staff.Username;
+                staffSelect.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching staff:', error));
+}
 </script>
 
 </body>

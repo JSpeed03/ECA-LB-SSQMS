@@ -462,159 +462,205 @@ input:checked + .slider:before {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const fetchData = (date = null) => {
-    let url = 'fetch_data_department.php';
-    if (date) {
-      url += `?date=${date}`;
-    }
-
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+    const fetchData = (date = null) => {
+        let url = 'fetch_data_department.php';
+        if (date) {
+            url += `?date=${date}`;
         }
-        return response.json();
-      })
-      .then(data => {
-        const tableBody = document.querySelector('#queueTable tbody');
-        tableBody.innerHTML = '';
 
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach((row, index) => {
-            const tr = document.createElement('tr');
-            if (index < 10) {
-              tr.classList.add('initial-row');
-            } else {
-              tr.classList.add('additional-row');
-            }
-            
-            Object.keys(row).forEach(key => {
-              const td = document.createElement('td');
-              if (key === 'status') {
-                // Create toggle switch for status with description
-                const statusContainer = document.createElement('div');
-                statusContainer.className = 'status-container';
-                
-                const switchLabel = document.createElement('label');
-                switchLabel.className = 'switch';
-                
-                const switchInput = document.createElement('input');
-                switchInput.type = 'checkbox';
-                switchInput.checked = row[key] == 1;
-                switchInput.addEventListener('change', () => toggleStatus(row.departmentID, switchInput.checked, statusDescription));
-                
-                const switchSlider = document.createElement('span');
-                switchSlider.className = 'slider round';
-                
-                switchLabel.appendChild(switchInput);
-                switchLabel.appendChild(switchSlider);
-                
-                const statusDescription = document.createElement('span');
-                statusDescription.textContent = row[key] == 1 ? 'Active' : 'Inactive';
-                statusDescription.className = 'status-description';
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.querySelector('#queueTable tbody');
+                tableBody.innerHTML = '';
 
-                statusContainer.appendChild(switchLabel);
-                statusContainer.appendChild(statusDescription);
-                td.appendChild(statusContainer);
-              } else {
-                td.textContent = row[key];
-              }
-              tr.appendChild(td);
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach((row, index) => {
+                        const tr = document.createElement('tr');
+                        if (index < 10) {
+                            tr.classList.add('initial-row');
+                        } else {
+                            tr.classList.add('additional-row');
+                        }
+                        
+                        Object.keys(row).forEach(key => {
+                            const td = document.createElement('td');
+                            if (key === 'status') {
+                                const statusContainer = document.createElement('div');
+                                statusContainer.className = 'status-container';
+                                
+                                const switchLabel = document.createElement('label');
+                                switchLabel.className = 'switch';
+                                
+                                const switchInput = document.createElement('input');
+                                switchInput.type = 'checkbox';
+                                switchInput.checked = row[key] == 1;
+                                switchInput.addEventListener('change', () => toggleStatus(row.departmentID, switchInput.checked, statusDescription));
+                                
+                                const switchSlider = document.createElement('span');
+                                switchSlider.className = 'slider round';
+                                
+                                switchLabel.appendChild(switchInput);
+                                switchLabel.appendChild(switchSlider);
+                                
+                                const statusDescription = document.createElement('span');
+                                statusDescription.textContent = row[key] == 1 ? 'Active' : 'Inactive';
+                                statusDescription.className = 'status-description';
+
+                                statusContainer.appendChild(switchLabel);
+                                statusContainer.appendChild(statusDescription);
+                                td.appendChild(statusContainer);
+                            } else {
+                                td.textContent = row[key];
+                            }
+                            tr.appendChild(td);
+                        });
+
+                        const actionTd = document.createElement('td');
+                        
+                        const editButton = document.createElement('button');
+                        editButton.textContent = 'Edit';
+                        editButton.style.backgroundColor = 'blue';
+                        editButton.style.color = 'white';
+                        editButton.onclick = () => editDepartment(row.departmentID, row.departmentCode, row.description);
+                        actionTd.appendChild(editButton);
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.style.backgroundColor = 'red';
+                        deleteButton.style.color = 'white';
+                        deleteButton.onclick = () => deleteDepartment(row.departmentID);
+                        actionTd.appendChild(deleteButton);
+                        
+                        tr.appendChild(actionTd);
+
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 12;
+                    td.textContent = 'No data available';
+                    tr.appendChild(td);
+                    tableBody.appendChild(tr);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                const tableBody = document.querySelector('#queueTable tbody');
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 12;
+                td.textContent = 'Error fetching data';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
             });
+    };
 
-            // Add delete button to the last cell
-            const deleteTd = document.createElement('td');
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.style.backgroundColor = 'red'; // Set background color to red
-            deleteButton.style.color = 'white'; // Set text color to white
-            deleteButton.onclick = () => deleteDepartment(row.departmentID);
-            deleteTd.appendChild(deleteButton);
-            tr.appendChild(deleteTd);
+    fetchData();
 
-            tableBody.appendChild(tr);
-          });
-        } else {
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 12;
-          td.textContent = 'No data available';
-          tr.appendChild(td);
-          tableBody.appendChild(tr);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        const tableBody = document.querySelector('#queueTable tbody');
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 12;
-        td.textContent = 'Error fetching data';
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-      });
-  };
-
-  fetchData();
-
-  document.getElementById('filterDate').addEventListener('change', function() {
-    const date = this.value;
-    fetchData(date);
-  });
+    document.getElementById('filterDate').addEventListener('change', function() {
+        const date = this.value;
+        fetchData(date);
+    });
 });
 
 function deleteDepartment(departmentID) {
-  if (confirm('Are you sure you want to delete this department?')) {
-    fetch('delete_department.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ departmentID: departmentID })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Department deleted successfully!');
-        // Optionally, reload the page or remove the deleted row from the table
-        location.reload();
-      } else {
-        alert('Error deleting department: ' + data.error);
-      }
-    })
-    .catch(error => {
-      console.error('Error deleting department:', error);
-    });
-  }
+    if (confirm('Are you sure you want to delete this department?')) {
+        fetch('delete_department.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ departmentID: departmentID })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Department deleted successfully!');
+                location.reload();
+            } else {
+                alert('Error deleting department: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting department:', error);
+        });
+    }
 }
 
 function toggleStatus(departmentID, status, statusDescription) {
-  fetch('update-status.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ departmentID, status: status ? 1 : 0 })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      statusDescription.textContent = status ? 'Active' : 'Inactive';
-
-    } else {
-      alert('Error updating status: ' + data.error);
-    }
-  })
-  .catch(error => {
-    console.error('Error updating status:', error);
-  });
+    fetch('update-status.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ departmentID, status: status ? 1 : 0 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            statusDescription.textContent = status ? 'Active' : 'Inactive';
+        } else {
+            alert('Error updating status: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating status:', error);
+    });
 }
 
+function editDepartment(departmentID, departmentCode, description) {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="editForm">
+            <input type="hidden" id="DepartmentID" name="DepartmentID" value="${departmentID}" required>
+            <input type="text" id="EditDepartmentCode" name="DepartmentCode" value="${departmentCode}" required placeholder="Department Code"><br><br>
+            <input type="text" id="EditDepartmentDescription" name="DepartmentDescription" value="${description}" required placeholder="Department Description"><br><br>
+            <button type="button" onclick="updateDepartment()">Update</button>
+            <button type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+    `;
+}
 
+function updateDepartment() {
+    const form = document.getElementById('editForm');
+    const formData = new FormData(form);
 
+    fetch('update_department.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Department updated successfully!');
+            location.reload(); // Reload the page upon successful update
+        } else {
+            alert('Error updating department: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating department:', error);
+    });
+}
 
+function cancelEdit() {
+    const formContainer = document.querySelector('.form-container');
+    formContainer.innerHTML = `
+        <form id="addForm" action="add_department.php" method="post">
+            <input type="text" id="DepartmentCode" name="DepartmentCode" required placeholder="Department Code"><br><br>
+            <input type="text" id="DepartmentDescription" name="DepartmentDescription" required placeholder="Department Description"><br><br>
+            <button type="submit">Add</button>
+        </form>
+    `;
+}
 </script>
-
 
 </body>
 </html>
