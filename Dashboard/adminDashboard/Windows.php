@@ -1,12 +1,12 @@
 <?php
- /*session_start();
+ session_start();
  require '../../DBConn.php';
  // Check if the user is logged in
  if (!isset($_SESSION['accountID'])) {
      // Redirect to login page if not logged in
      header("Location: ../../sign-in");
      exit();
- }*/
+ }
 ?>
 
 <!doctype html>
