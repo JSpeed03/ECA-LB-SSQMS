@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: rgb(48, 229, 241);
+  background-color: black;
   overflow: hidden;
 }
 
@@ -210,4 +210,14 @@ z-index: -2;
 
 .blink {
   animation: blink 1s step-end infinite;
+}
+
+.transition {
+  position: fixed; /* or absolute, depending on your layout */
+  bottom: 271;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  z-index: -100; /* set a very low z-index value */
 }

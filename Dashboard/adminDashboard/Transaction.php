@@ -19,7 +19,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.122.0">
     <title>Transaction</title>
-    <link href="../../logo/exact logo - HD.png" rel="icon">
+    <link href="../../logo/QMS-logo.png" rel="icon">
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
 

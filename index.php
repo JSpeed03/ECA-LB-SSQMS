@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Start</title>
-    <link href="logo/exact logo - HD.png" rel="icon">
+    <link href="logo/QMS-logo.png" rel="icon">
     <style>
         body, html {
             display: flex;

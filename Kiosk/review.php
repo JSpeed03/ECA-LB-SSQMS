@@ -56,7 +56,7 @@ $userTypeName = $userType == 1 ? 'Old Student' : ($userType == 2 ? 'New Student'
 <html>
 <head>
     <title>Review Details</title>
-    <link href="../logo/exact logo - HD.png" rel="icon">
+    <link href="../logo/QMS-logo.png" rel="icon">
     <link rel="stylesheet" href="reviewstyle.css">
 
 </head>

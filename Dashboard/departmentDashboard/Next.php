@@ -104,13 +104,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          
                           
                             $insert_sql = "INSERT INTO queue (`Queue Number`, `User Type ID`, `Student ID`, `Name`, `Department_ID`, `Transaction ID`, `Transaction Step`, `Window_ID`, `Time Created`, `Status`, `enrollment`)
-                                           VALUES ('$queueNumber', '$userTypeID', '$studentID', '$name', '$newDepartmentID', '$transactionID', '$transactionStep', '$staff', '$timeCreated', 'Pending',  '$program_Id')";
+                                           VALUES ('$queueNumber', '$userTypeID', '$studentID', '$name', '$newDepartmentID', '$transactionID', '$transactionStep', NULL, '$timeCreated', 'Pending',  '$program_Id')";
          
                             $insert_result = mysqli_query($conn, $insert_sql);
          
                             if ($insert_result) {
                                
-                                $sql2 = "SELECT `Queue identifier` FROM `queue` WHERE `Time Created` = (SELECT MIN(`Time Created`) FROM queue WHERE Status='Pending' AND `Staff ID` = '$logged_in_account')";
+                                $sql2 = "SELECT `Queue identifier` FROM `queue` WHERE `Time Created` = (SELECT MIN(`Time Created`) FROM queue WHERE Status='Pending' AND `Window_ID` = '$logged_in_account')";
                                 $result2 = mysqli_query($conn, $sql2);
          
                                 if ($result2 && $next_row = mysqli_fetch_assoc($result2)) {

@@ -14,7 +14,7 @@ include '../DBConn.php';
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.122.0">
   <title>Signin ECA-LB SSQMS</title>
-  <link href="../logo/exact logo - HD.png" rel="icon">
+  <link href="../logo/QMS-logo.png" rel="icon">
   <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">

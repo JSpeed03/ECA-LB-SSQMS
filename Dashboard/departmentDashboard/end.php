@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $date = date('Y-m-d H:i:s');
         $logged_in_department = $_SESSION['department_id'];
 
-        $sql_query1 = "SELECT `staffwindowID` FROM `staff-window` WHERE `Department id`='$logged_in_department'";
+        $sql_query1 = "SELECT `Window_ID` FROM `staff-window` WHERE `Department id`='$logged_in_department'";
         $sql_res1 = mysqli_query($conn, $sql_query1);
 
         $sql_query2 = "SELECT `Transaction Step` FROM `queue` WHERE `Queue identifier`='$queue_id'";
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row1 = mysqli_fetch_assoc($sql_res1);
                 $row2 = mysqli_fetch_assoc($sql_res2);
 
-                $staff = $row1['staffwindowID'];
+                $staff = $row1['Window_ID'];
                 $step = $row2['Transaction Step'];
 
 
@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          
                           
                             $insert_sql = "INSERT INTO queue (`Queue Number`, `User Type ID`, `Student ID`, `Name`, `Department_ID`, `Transaction ID`, `Transaction Step`, `Window_ID`, `Time Created`, `Status`, `enrollment`)
-                                           VALUES ('$queueNumber', '$userTypeID', '$studentID', '$name', '$newDepartmentID', '$transactionID', '$transactionStep', '$staff', '$timeCreated', 'Pending',  '$program_Id')";
+                                           VALUES ('$queueNumber', '$userTypeID', '$studentID', '$name', '$newDepartmentID', '$transactionID', '$transactionStep', '$windowID', '$timeCreated', 'Pending',  '$program_Id')";
          
                             $insert_result = mysqli_query($conn, $insert_sql);
          

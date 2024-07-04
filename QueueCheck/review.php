@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Review Details</title>
     <link rel="stylesheet" href="reviewstyle.css">
+    <link href="../logo/QMS-logo.png" rel="icon">
 </head>
 <body>
     <div class="container">

@@ -6,7 +6,7 @@ require '../DBConn.php';
 <html>
 <head>
   <title>Queue Window</title>
-  <link href="../logo/exact logo - HD.png" rel="icon">
+  <link href="../logo/QMS-logo.png" rel="icon">
   <link rel="stylesheet" href="Queue Window.css">
   <script type="text/javascript">
 
@@ -110,6 +110,9 @@ if (!empty($videos)) {
   <div class="logo-bg">
           <img class="bottom-left-bg" src="../logo/gradient bg.png" alt="Logo logo_main" />
         </div>
+  <div class="transition">
+      <img src="../logo/transition.png" alt="transition_img">
+  </div>
   <script>
     function updateClock() {
   const now = new Date();
@@ -217,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const tr = document.createElement('tr');
           const td = document.createElement('td');
           td.colSpan = 2;
-          td.textContent = 'No data available';
+          td.textContent = 'No Queue available';
           tr.appendChild(td);
           tableBody.appendChild(tr);
         }
@@ -243,6 +246,8 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchData(date);
   });
 });
+
+
 
 </script>
 

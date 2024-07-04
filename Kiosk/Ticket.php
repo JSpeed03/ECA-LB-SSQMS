@@ -6,7 +6,7 @@ $queueNumber = isset($_GET['queueNumber']) ? $_GET['queueNumber'] : 'Unknown';
 <html>
 <head>
     <title>Queue Number</title>
-    <link href="../logo/exact logo - HD.png" rel="icon">
+    <link href="../logo/QMS-logo.png" rel="icon">
     <link rel="stylesheet" href="TicketStyle.css">
 </head>
 <body>
