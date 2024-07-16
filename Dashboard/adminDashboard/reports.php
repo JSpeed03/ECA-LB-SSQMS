@@ -453,7 +453,7 @@ if (isset($_POST['filterDate'])) {
 
         var options = {
             series: [{
-                name: 'Average Time Taken (Minutes)',
+                name: 'Average Time Taken (Min)',
                 data: avgTimeTakens
             }],
             chart: {
@@ -537,7 +537,7 @@ if (isset($_POST['filterDate'])) {
 
         var options = {
             series: [{
-                name: 'Average Time Taken (Hrs)',
+                name: 'Average Time Taken (Min)',
                 data: avgTimeTakens
             }],
             chart: {

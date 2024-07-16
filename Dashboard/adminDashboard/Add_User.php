@@ -13,17 +13,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $re_pass = validate($_POST['confirm']);
 
     if (empty($uname) || empty($password) || empty($re_pass) ) {
-    header("Location: AccMng.php?error=" . urlencode("All fields are required") . "&$user_data");
-    exit();
-    } elseif ($password !== $re_pass) {
-    header("Location: AccMng.php?error=" . urlencode("The confirmation password does not match") . "&$user_data");
-    exit();
-    } else if (strlen($password) < 8) {
-    header("Location: AccMng.php?error=" . urlencode("Password must be at least 8 characters"));
-    exit();
-    } else if (!preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
-    header("Location: AccMng.php?error=" . urlencode("Password must contain at least one capital letter and one number"));
-    exit();
+        header("Location: AccMng.php?error=All fields are required&$user_data");
+        exit();
+    } elseif (!password_verify($re_pass, $password)) {
+        header("Location: AccMng.php?error=The confirmation password does not match&$user_data");
+        exit();
+    }else   if (strlen($raw_password) < 8) {
+        header("Location: AccMng.php?error=Password must be at least 8 characters");
+        exit();
+    } else if (!preg_match('/[A-Z]/', $raw_password) || !preg_match('/[0-9]/', $raw_password)) {
+        header("Location: AccMng.php?error=Password must contain at least one capital letter and one number");
+        exit();
     }
     else {
                  

@@ -25,6 +25,7 @@ $sql = "SELECT
         LEFT JOIN `window` el ON el.`windowID` = pi.`Window_ID`
         LEFT JOIN `departments` d ON pi.`Department_ID` = d.`departmentID`
         WHERE pi.`Status`='Called' OR pi.Status = 'Called Again'
+        ORDER BY pi.`Time Called` DESC
         LIMIT 3";
 
 if ($date) {
