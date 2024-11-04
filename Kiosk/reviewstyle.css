@@ -8,21 +8,26 @@ body {
     margin: 0;
     font-family: 'Times New Roman';
 }
+
 .container {
     background-color: #4d30aa;
     padding: 30px;
-    padding-left:  80px;
+    padding-left: 80px;
     padding-right: 80px;
     border-radius: 5px;
-    width: 500px;
+    width: 100%; /* Set to 100% for responsiveness */
+    max-width: 500px; /* Maximum width for larger screens */
 }
+
 h2 {
     font-size: 40px;
 }
+
 p {
     font-size: 30px;
     margin-bottom: 15px;
 }
+
 button[type="submit"][id="submit-btn"],
 button[type="button"] {
     background-color: #e3ff37;
@@ -32,16 +37,20 @@ button[type="button"] {
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
-    margin-right: 10px;
+    margin: 10px 0; /* Add vertical margin for spacing */
+    width: 100%; /* Full width for buttons */
     transition: background-color 0.3s ease-in-out;
 }
+
 button[type="submit"][id="submit-btn"]:hover,
 button[type="button"]:hover {
     background-color: #0056b3;
 }
+
 button[type="submit"] {
     background-color: #e3ff37;
 }
+
 button[type="submit"]:hover {
     background-color: #e3ff37;
 }
@@ -75,8 +84,65 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:hover {
     border-color: #ccc;
 }
+
 h3 {
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
     margin-top: 3px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 20px; /* Reduce padding for smaller screens */
+        padding-right: 20px;
+    }
+
+    h2 {
+        font-size: 30px; /* Decrease heading size */
+    }
+
+    p {
+        font-size: 24px; /* Decrease paragraph size */
+    }
+
+    button[type="submit"][id="submit-btn"],
+    button[type="button"] {
+        font-size: 16px; /* Smaller button text */
+        margin: 10px 0; /* Ensure margin for spacing */
+    }
+
+    input[type="checkbox"] {
+        width: 16px; /* Smaller checkbox */
+        height: 16px;
+    }
+
+    input[type="checkbox"] + label {
+        font-size: 20px; /* Smaller checkbox label */
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 24px; /* Further decrease heading size */
+    }
+
+    p {
+        font-size: 20px; /* Further decrease paragraph size */
+    }
+
+    button[type="submit"][id="submit-btn"],
+    button[type="button"] {
+        font-size: 14px; /* Smaller button text */
+        margin: 10px 0; /* Ensure margin for spacing */
+    }
+
+    input[type="checkbox"] {
+        width: 14px; /* Even smaller checkbox */
+        height: 14px;
+    }
+
+    input[type="checkbox"] + label {
+        font-size: 18px; /* Smaller checkbox label */
+    }
 }

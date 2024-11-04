@@ -22,7 +22,7 @@ $queueNumber = isset($_GET['queueNumber']) ? $_GET['queueNumber'] : 'Unknown';
     <div class="button-container">
     </div>
     <footer>
-        <a id="newQueueLink" href="../index.php"><button id="newQueueBtn">Home</button></a>
+        <a id="newQueueLink" href="./../../Findline"><button id="newQueueBtn">Home</button></a>
     </footer>
 
     <script>
