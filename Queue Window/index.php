@@ -122,7 +122,7 @@ if (!empty($videos)) {
   const digitalClock = document.getElementById("digital-clock");
   digitalClock.textContent = `${hours}:${minutes}:${seconds}`;
 
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const day = days[now.getDay()];
   const date = now.getDate();
@@ -140,7 +140,7 @@ function changeLogo() {
   logoDiv.src = `../logo/${randomLogo}`;
 }
 
-async function fetchNews() { //limit of 52 character max space include
+async function fetchNews() { //limit of 52 character max, space include
     try {
       const response = await fetch('news_data.txt'); 
       if (response.ok) {
